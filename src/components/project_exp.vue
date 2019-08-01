@@ -1,6 +1,6 @@
 <template>
     <div class="project_exp">
-        <h3 class="hr">项目经验</h3>
+        <h3 class="hr">项目经验<button class="delete_data" @click="deleteProData()">删除本项数据</button></h3>
         <div v-if="projectInfo">
             <ul class="row" v-for="(obj,index) in projectInfo" :key="index">
                 <h4>{{obj.proName}}</h4>
@@ -68,6 +68,10 @@ export default {
     }
   },
   methods: {
+    deleteProData () {
+      alert('只删除了页面的数据，如果希望同时删除浏览器缓存中的数据，请再点击‘保存页面数据’进行覆盖')
+      this.projectInfo = []
+    },
     // 添加其他描述项
     addDescribe () {
       this.inputOther.push({title: null, content: null})
@@ -144,7 +148,6 @@ export default {
     word-wrap none
     input[type=text]
       width 90%
-
 div.project_exp
   .row
     padding 0

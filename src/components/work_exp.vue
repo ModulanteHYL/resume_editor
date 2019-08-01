@@ -1,6 +1,6 @@
 <template>
     <div class="work_exp">
-        <h3 class="hr">工作经历</h3>
+        <h3 class="hr">工作经历<button class="delete_data" @click="deleteWorkData()">删除本项数据</button></h3>
         <div v-if="workInfo">
             <div class="work" v-for="(obj,index) in workInfo" :key="index">
                 <div class="company_info clearfix">
@@ -58,6 +58,11 @@ export default {
     }
   },
   methods: {
+    // 删除本项的数据
+    deleteWorkData () {
+      alert('只删除了页面的数据，如果希望同时删除浏览器缓存中的数据，请再点击‘保存页面数据’进行覆盖')
+      this.workInfo = []
+    },
     // 增加一条职责
     addOneList () {
       if (this.lists[this.lists.length - 1].list) {
