@@ -5,16 +5,16 @@
             <ul class="row" v-for="(obj,index) in projectInfo" :key="index">
                 <h4>{{obj.proName}}</h4>
                 <li>
-                    <span>项目描述：</span><br>
-                    <section style="white-space:pre-wrap;">{{obj.proDescribe}}</section>
+                    <span class="pro_span">项目描述：</span><br>
+                    <section class="pro_section">{{obj.proDescribe}}</section>
                 </li>
                 <li>
-                    <span>主要负责：</span><br>
-                    <section style="white-space:pre-wrap;">{{obj.myDuty}}</section>
+                    <span class="pro_span">主要负责：</span><br>
+                    <section class="pro_section">{{obj.myDuty}}</section>
                 </li>
                 <li v-for="(item,index) in obj.other" :key="index">
-                    <span>{{item.title}}</span><br>
-                    <section style="white-space:pre-wrap;">{{item.content}}</section>
+                    <span class="pro_span">{{item.title}}</span><br>
+                    <section class="pro_section">{{item.content}}</section>
                 </li>
             </ul>
         </div>
@@ -119,12 +119,16 @@ export default {
 <style lang="stylus">
 .edit_box
   li
-    display flex
     span 
-      flex 2.5
-      margin 0
-    section 
-      flex 17.5
+      float left
+    .style_supply
+      min-height 5rem
+      max-width 98%
+      white-space pre-wrap
+      resize none 
+      background-color inherit 
+      font inherit
+      overflow hidden
   .add_item
     visibility hidden
     margin-left 13%
@@ -140,14 +144,7 @@ export default {
     word-wrap none
     input[type=text]
       width 90%
-.style_supply
-  min-height 5rem
-  max-width 98%
-  white-space pre
-  resize none 
-  background-color inherit 
-  font inherit
-  overflow hidden
+
 div.project_exp
   .row
     padding 0
@@ -157,9 +154,10 @@ div.project_exp
     li
       list-style none
       margin-left 11px
-      span
+      .pro_span
         float left
         font-weight bold
-      section 
-        word-break break-all
+      .pro_section 
+        word-wrap break-word//字母换行
+        white-space pre-wrap//中文换行
 </style>
