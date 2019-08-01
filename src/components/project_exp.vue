@@ -6,15 +6,15 @@
                 <h4>{{obj.proName}}</h4>
                 <li>
                     <span>项目描述：</span><br>
-                    <section style="white-space:pre;">{{obj.proDescribe}}</section>
+                    <section style="white-space:pre-wrap;">{{obj.proDescribe}}</section>
                 </li>
                 <li>
                     <span>主要负责：</span><br>
-                    <section style="white-space:pre;">{{obj.myDuty}}</section>
+                    <section style="white-space:pre-wrap;">{{obj.myDuty}}</section>
                 </li>
                 <li v-for="(item,index) in obj.other" :key="index">
                     <span>{{item.title}}</span><br>
-                    <section style="white-space:pre;">{{item.content}}</section>
+                    <section style="white-space:pre-wrap;">{{item.content}}</section>
                 </li>
             </ul>
         </div>
@@ -142,11 +142,12 @@ export default {
       width 90%
 .style_supply
   min-height 5rem
-  width 98%
+  max-width 98%
   white-space pre
   resize none 
   background-color inherit 
   font inherit
+  overflow hidden
 div.project_exp
   .row
     padding 0
@@ -159,4 +160,6 @@ div.project_exp
       span
         float left
         font-weight bold
+      section 
+        word-break break-all
 </style>
