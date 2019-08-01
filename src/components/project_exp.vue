@@ -3,18 +3,18 @@
         <h3 class="hr">项目经验</h3>
         <div v-if="projectInfo">
             <ul class="row" v-for="(obj,index) in projectInfo" :key="index">
-                <h4>{{obj.proName}}</h4>
+                <h4>{{obj.proName}}</h4><button>修改</button>
                 <li>
                     <span>项目描述：</span><br>
-                    <section>{{obj.proDescribe}}</section>
+                    <section style="white-space:pre;">{{obj.proDescribe}}</section>
                 </li>
                 <li>
                     <span>主要负责：</span><br>
-                    <section>{{obj.myDuty}}</section>
+                    <section style="white-space:pre;">{{obj.myDuty}}</section>
                 </li>
                 <li v-for="(item,index) in obj.other" :key="index">
                     <span>{{item.title}}</span><br>
-                    <section>{{item.content}}</section>
+                    <section style="white-space:pre;">{{item.content}}</section>
                 </li>
             </ul>
         </div>
@@ -22,15 +22,17 @@
             <h4><input class="list_box" type="text" placeholder="项目名称..." v-model="proName"></h4>
             <li>
                 <span>项目描述：</span>
-                <section><div class="content-style style_supply" contenteditable="true" @input="proDescribe=$event.target.textContent"></div></section>
+                <section><textarea class="content-style style_supply"  @input="proDescribe=$event.target.value"></textarea></section>
             </li>
             <li>
                 <span>主要负责：</span>
-                <section><div class="content-style style_supply" contenteditable="true" @input="myDuty=$event.target.textContent"></div></section>
+                <section><textarea class="content-style style_supply"  @input="myDuty=$event.target.value"></textarea></section>
             </li>
             <li v-for="(item,index) in inputOther" :key="index">
-                <span><input class="list_box" style="width:43%;margin:0;padding:0;line-height:1.5rem" type="text" v-model="item.title">:</span>
-                <section><div class="content-style style_supply" contenteditable="true" @input="item.content=$event.target.textContent"></div></section>
+                <span class="other_item">
+                  <input class="list_box" type="text" v-model="item.title">:
+                </span>
+                <section><textarea class="content-style style_supply" @input="item.content=$event.target.value"></textarea></section>
             </li>
             <button class="add_item" @click="addDescribe()">添加其他项</button>
             <button class="add_project" @click="submitProject()">提交本条经验</button>
@@ -68,7 +70,7 @@ export default {
   methods: {
     // 添加其他描述项
     addDescribe () {
-      this.inputOther.push({title: '', content: ''})
+      this.inputOther.push({title: null, content: null})
     },
     // 提交内容
     submitProject () {
@@ -116,6 +118,13 @@ export default {
 </script>
 <style lang="stylus">
 .edit_box
+  li
+    display flex
+    span 
+      flex 2.5
+      margin 0
+    section 
+      flex 17.5
   .add_item
     visibility hidden
     margin-left 13%
@@ -124,10 +133,20 @@ export default {
     visibility visible
   .add_project
     margin-left 61%
+  .other_item
+    display inline-block
+    width 87px
+    margin 0
+    word-wrap none
+    input[type=text]
+      width 90%
 .style_supply
   min-height 5rem
-  margin-left 11%
-  width 88%
+  width 98%
+  white-space pre
+  resize none 
+  background-color inherit 
+  font inherit
 div.project_exp
   .row
     padding 0

@@ -95,6 +95,8 @@ div.skills
         background rgb(150,150,150)
   .skills_lists
       padding-left 20px
+      .submit-content
+        height 1.8rem
       li
         display flex
         line-height 1.5em
