@@ -3,7 +3,7 @@
         <h3 class="hr">项目经验</h3>
         <div v-if="projectInfo">
             <ul class="row" v-for="(obj,index) in projectInfo" :key="index">
-                <h4>{{obj.proName}}</h4><button>修改</button>
+                <h4>{{obj.proName}}</h4>
                 <li>
                     <span>项目描述：</span><br>
                     <section style="white-space:pre;">{{obj.proDescribe}}</section>
