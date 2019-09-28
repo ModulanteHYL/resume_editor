@@ -1,6 +1,6 @@
 <template>
     <div class="project_exp">
-        <h3 class="hr">项目经验<button class="delete_data" @click="deleteProData()">删除本项数据</button></h3>
+        <h3 class="hr">项目经验<button class="delete_data" @click="deleteProData()">删除已输入数据</button></h3>
         <div v-if="projectInfo">
             <ul class="row" v-for="(obj,index) in projectInfo" :key="index">
                 <h4>{{obj.proName}}</h4>
@@ -78,7 +78,8 @@ export default {
     },
     // 提交内容
     submitProject () {
-      let data = {
+      if(this.proName && this.proDescribe && this.myDuty){
+        let data = {
         proName: this.proName,
         proDescribe: this.proDescribe,
         myDuty: this.myDuty,
@@ -87,6 +88,10 @@ export default {
       this.projectInfo.push(Object.assign({}, data))
       this.clearData()
       this.isAdd = false
+      }
+      else{
+        alert('请输入完整信息后再提交！')
+      }
     },
     // 清除表层输入框数据
     clearData () {

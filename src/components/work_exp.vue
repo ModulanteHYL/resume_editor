@@ -1,6 +1,6 @@
 <template>
     <div class="work_exp">
-        <h3 class="hr">工作经历<button class="delete_data" @click="deleteWorkData()">删除本项数据</button></h3>
+        <h3 class="hr">工作经历<button class="delete_data" @click="deleteWorkData()">删除已输入数据</button></h3>
         <div v-if="workInfo">
             <div class="work" v-for="(obj,index) in workInfo" :key="index">
                 <div class="company_info clearfix">
@@ -75,7 +75,8 @@ export default {
     },
     // 将输入框数据提交到展示框
     submitOne () {
-      let data = {
+      if(this.company && this.workYear && this.job && this.address && this.workContent){
+        let data = {
         company: this.company,
         workYear: this.workYear,
         job: this.job,
@@ -85,6 +86,10 @@ export default {
       this.workInfo.push(Object.assign({}, data))
       this.clearData()
       this.isAdd = false
+      }
+      else{
+        alert('请输入完整的内容再提交！')
+      }
     },
     // 清除输入框数据
     clearData () {

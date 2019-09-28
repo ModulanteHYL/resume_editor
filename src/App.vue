@@ -103,8 +103,10 @@ export default {
     },
     // 隐藏全部按钮及输入框
     hiddenAll () {
-      PubSub.publish('hidden')
-      this.isComplete = true
+      if(confirm('请确认简历所有内容已输入完毕，确认后按钮将不可用。隐藏完所有按钮后，按下Ctrl+P可将简历另存为PDF')){
+        PubSub.publish('hidden')
+        this.isComplete = true
+      }
     },
     // 清除页面数据缓存
     clearStorage () {
@@ -168,7 +170,7 @@ export default {
     // 添加一个新组件到页面
     addOne () {
       if (!this.componentName) { // 判断是否选择了组件
-        alert('没有选择标题！')
+        alert('请在下拉框选择要添加的条目！')
         return
       }
       for (let obj of this.componentArr) {
@@ -178,7 +180,7 @@ export default {
         }
         this.hasIt = false
       }
-      this.hasIt ? alert('已有该标题！不能再添加') : this.chooseComponent(this.componentName, this.componentIndex)
+      this.hasIt ? alert('已有该条目！不能再添加') : this.chooseComponent(this.componentName, this.componentIndex)
     },
     // 删除全部组件
     deleteAll () {
@@ -186,8 +188,13 @@ export default {
     },
     // 删除一个组件
     deleteOne () {
-      const newArr = this.componentArr.filter(obj => obj.id !== this.componentIndex)
-      this.componentArr = newArr
+      if(this.componentIndex){
+        const newArr = this.componentArr.filter(obj => obj.id !== this.componentIndex)
+        this.componentArr = newArr
+      }
+      else{
+        alert('请在左边下拉框选择要删除的条目')
+      }
     },
     // 组件分类
     chooseComponent (cn, id) {
@@ -235,6 +242,7 @@ export default {
         this[item] = base[item]
       })
     }
+    this.addAll()
   },
   // 订阅子组件submitData事件，获得子组件数据
   mounted () {

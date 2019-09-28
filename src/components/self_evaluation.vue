@@ -22,7 +22,12 @@ export default {
     // 提交输入框内容到展示框
     submitText () {
       let text = document.querySelector('.edit-box').textContent
-      this.selfEvaluation = text
+      if(text!=''){
+        this.selfEvaluation = text
+      }
+      else{
+        alert('请输入内容！')
+      }
     },
     // 重新编辑内容
     updataText () {
