@@ -3,26 +3,26 @@
     <header class="personal_info clearfix">
         <div class="info">
             <h1 v-show="name" @click="name=''">{{name}}</h1>
-            <input class="list_box" type="text" placeholder="姓名..." v-show="!name" @blur="name=$event.target.value">
+            <input class="list_box" type="text" placeholder="姓名..." v-show="!name" @blur="name=$event.target.value" @keypress.enter="name=$event.target.value">
             <div>
                 <span v-show='age' @click="age=null">{{age}}</span>
-                <input class="list_box" type="text" placeholder="年龄..." v-show="!age" @blur="age=$event.target.value" style="width:5vw">岁
+                <input class="list_box" type="text" placeholder="年龄..." v-show="!age" @blur="age=$event.target.value" @keypress.enter="age=$event.target.value" style="width:5vw">岁
                 <span>|</span>
                 <span v-show="workYear" @click="workYear = NaN">工作年限：{{workYear}}</span>
-                <input class="list_box" v-show="!workYear" type="text" placeholder="工作年限..." style="width:10vw" @blur="workYear=$event.target.value">年
+                <input class="list_box" v-show="!workYear" type="text" placeholder="工作年限..." style="width:10vw" @blur="workYear=$event.target.value" @keypress.enter="workYear=$event.target.value">年
                 <span>|</span>
                 <span v-show="myHome" @click="myHome = ''">现居：{{myHome}}</span>
-                <input class="list_box" v-show="!myHome" type="text" placeholder="现居地..." style="width:10vw" @blur="myHome=$event.target.value">
+                <input class="list_box" v-show="!myHome" type="text" placeholder="现居地..." style="width:10vw" @blur="myHome=$event.target.value" @keypress.enter="myHome=$event.target.value">
                 <br>
                 <span v-show="jobPost" @click="jobPost=''">求职岗位:{{jobPost}}</span>
-                <input class="list_box" type="text" placeholder=" 应聘职位..." v-show="!jobPost" @blur="jobPost=$event.target.value">
+                <input class="list_box" type="text" placeholder=" 应聘职位..." v-show="!jobPost" @blur="jobPost=$event.target.value" @keypress.enter="jobPost=$event.target.value">
             </div>
             <div>
                 <span v-show="phoneNum" @click="phoneNum = NaN">联系电话：{{phoneNum}}</span>
-                <input class="list_box" type="text" placeholder="联系电话..." v-show="!phoneNum" @blur="phoneNum=$event.target.value">
+                <input class="list_box" type="text" placeholder="联系电话..." v-show="!phoneNum" @blur="phoneNum=$event.target.value" @keypress.enter="phoneNum=$event.target.value">
                 <br>
                 <span v-show="email" @click="email = ''">邮箱：{{email}}</span>
-                <input class="list_box" type="text" placeholder="邮箱..." v-show='!email' @blur="email=$event.target.value">
+                <input class="list_box" type="text" placeholder="邮箱..." v-show='!email' @blur="email=$event.target.value" @keypress.enter="email=$event.target.value">
             </div>
         </div>
         <div :class="[imgSrc? '':'dashed_border', 'head_pic']" @click="imgSrc = ''">
@@ -50,6 +50,7 @@
         <button @click="hiddenAll">隐藏全部按钮</button>
         <button @click="saveData">保存页面数据</button>
         <button @click="clearStorage">清除已存数据</button>
+        <div class="tip"><span title="编辑完简历按下Ctrl+P">鼠标放在我上面，告诉你如何将网页另存为PDF简历？</span></div>
       </div>
     </main>
   </div>
@@ -263,6 +264,10 @@ export default {
   border 1px solid gray
   opacity 0.7
   border-radius 5px
+  .tip
+    cursor pointer
+    &:hover
+      color blue
 #app
   width 100%
   margin auto
