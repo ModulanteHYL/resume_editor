@@ -25,5 +25,8 @@ module.exports = {
     'generator-star-spacing': 'off',
     // allow debugger during development
     'no-debugger': process.env.NODE_ENV === 'production' ? 'error' : 'off'
+  },
+  globals: { // 在webpack里引入的全局变量需要在这里写明，不然会报undefined错误
+    PubSub: true
   }
 }

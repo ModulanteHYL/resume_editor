@@ -78,18 +78,17 @@ export default {
     },
     // 提交内容
     submitProject () {
-      if(this.proName && this.proDescribe && this.myDuty){
+      if (this.proName && this.proDescribe && this.myDuty) {
         let data = {
-        proName: this.proName,
-        proDescribe: this.proDescribe,
-        myDuty: this.myDuty,
-        other: Object.assign([], this.inputOther)
-      }
-      this.projectInfo.push(Object.assign({}, data))
-      this.clearData()
-      this.isAdd = false
-      }
-      else{
+          proName: this.proName,
+          proDescribe: this.proDescribe,
+          myDuty: this.myDuty,
+          other: Object.assign([], this.inputOther)
+        }
+        this.projectInfo.push(Object.assign({}, data))
+        this.clearData()
+        this.isAdd = false
+      } else {
         alert('请输入完整信息后再提交！')
       }
     },
@@ -109,7 +108,13 @@ export default {
     let resume = window.localStorage.getItem('resume')
     if (resume) {
       this.projectInfo = JSON.parse(resume)['project']
-      this.isAdd = false
+      if (this.projectInfo.length === 0) {
+        this.isAdd = true
+      } else {
+        this.isAdd = false
+      }
+    } else {
+      this.isAdd = true
     }
   },
   mounted () {
@@ -119,23 +124,26 @@ export default {
     PubSub.subscribe('hidden', () => {
       this.hiddenAll = true
     })
+    PubSub.subscribe('editing', (msg, data) => {
+      this.hiddenAll = false
+    })
   },
   beforeDestroy () {
     PubSub.unsubscribe(this.subscribe)
   }
 }
 </script>
-<style lang="stylus">
+<style lang="stylus" scoped>
 .edit_box
   li
-    span 
+    span
       float left
     .style_supply
       min-height 5rem
       max-width 98%
       white-space pre-wrap
-      resize none 
-      background-color inherit 
+      resize none
+      background-color inherit
       font inherit
       overflow hidden
   .add_item
@@ -165,7 +173,7 @@ div.project_exp
       .pro_span
         float left
         font-weight bold
-      .pro_section 
+      .pro_section
         word-wrap break-word//字母换行
         white-space pre-wrap//中文换行
 </style>

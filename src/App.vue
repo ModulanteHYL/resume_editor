@@ -1,40 +1,122 @@
 <template>
-  <div id="app">
+  <div id="app" :class="{'app_pd-tp-bm': isEditMode}">
     <header class="personal_info clearfix">
+        <div id="title" class="main-title">个人简历</div>
         <div class="info">
-            <h1 v-show="name" @click="name=''">{{name}}</h1>
-            <input class="list_box" type="text" placeholder="姓名..." v-show="!name" @blur="name=$event.target.value" @keypress.enter="name=$event.target.value">
+            <span class="my_name_label m-pointer" v-show="myName" @click="inputEdit('myName', 'myNameRef')">{{ myName }}</span>
+            <input
+              ref="myNameRef"
+              class="list_box my_name_input"
+              type="text"
+              placeholder="姓名..."
+              maxlength="10"
+              v-show="!myName"
+              @blur="myName=$event.target.value"
+              @keypress.enter="myName=$event.target.value"
+              >
             <div>
-                <span v-show='age' @click="age=null">{{age}}</span>
-                <input class="list_box" type="text" placeholder="年龄..." v-show="!age" @blur="age=$event.target.value" @keypress.enter="age=$event.target.value" style="width:5vw">岁
+                <span>
+                  <span class="m-pointer" v-show='age' @click="inputEdit('age', 'myAgeRef')">{{age}}</span>
+                  <input
+                    ref="myAgeRef"
+                    class="list_box"
+                    type="text"
+                    placeholder="年龄..."
+                    maxlength="3"
+                    v-show="!age"
+                    @blur="age=$event.target.value"
+                    @keypress.enter="age=$event.target.value"
+                    style="width:5vw"
+                    >
+                  岁
+                </span>
                 <span>|</span>
-                <span v-show="workYear" @click="workYear = NaN">工作年限：{{workYear}}</span>
-                <input class="list_box" v-show="!workYear" type="text" placeholder="工作年限..." style="width:10vw" @blur="workYear=$event.target.value" @keypress.enter="workYear=$event.target.value">年
+                <span>工作年限：
+                  <span class="m-pointer" v-show="workYear" @click="inputEdit('workYear', 'myWorkYearRef')">{{workYear}}</span>
+                  <input
+                    ref="myWorkYearRef"
+                    class="list_box"
+                    v-show="!workYear"
+                    type="text"
+                    maxlength="3"
+                    placeholder="年限..."
+                    style="width:3vw"
+                    @blur="workYear=$event.target.value"
+                    @keypress.enter="workYear=$event.target.value"
+                    >
+                  年
+                </span>
                 <span>|</span>
-                <span v-show="myHome" @click="myHome = ''">现居：{{myHome}}</span>
-                <input class="list_box" v-show="!myHome" type="text" placeholder="现居地..." style="width:10vw" @blur="myHome=$event.target.value" @keypress.enter="myHome=$event.target.value">
-                <br>
-                <span v-show="jobPost" @click="jobPost=''">求职岗位:{{jobPost}}</span>
-                <input class="list_box" type="text" placeholder=" 应聘职位..." v-show="!jobPost" @blur="jobPost=$event.target.value" @keypress.enter="jobPost=$event.target.value">
+                <span>现居：
+                  <span class="m-pointer" v-show="myHome" @click="inputEdit('myHome', 'myAddressRef')">{{myHome}}</span>
+                  <input
+                    ref="myAddressRef"
+                    class="list_box"
+                    v-show="!myHome"
+                    type="text"
+                    maxlength="20"
+                    placeholder="现居地...长度不超过20字符"
+                    style="width:10vw"
+                    @blur="myHome=$event.target.value"
+                    @keypress.enter="myHome=$event.target.value"
+                    >
+                </span>
             </div>
             <div>
-                <span v-show="phoneNum" @click="phoneNum = NaN">联系电话：{{phoneNum}}</span>
-                <input class="list_box" type="text" placeholder="联系电话..." v-show="!phoneNum" @blur="phoneNum=$event.target.value" @keypress.enter="phoneNum=$event.target.value">
+                <span>求职岗位:
+                  <span class="m-pointer" v-show="jobPost" @click="inputEdit('jobPost', 'myJobWantedRef')">{{jobPost}}</span>
+                  <input
+                    ref="myJobWantedRef"
+                    class="list_box"
+                    type="text"
+                    maxlength="20"
+                    placeholder=" 应聘职位..."
+                    v-show="!jobPost"
+                    @blur="jobPost=$event.target.value"
+                    @keypress.enter="jobPost=$event.target.value"
+                    >
+                </span>
                 <br>
-                <span v-show="email" @click="email = ''">邮箱：{{email}}</span>
-                <input class="list_box" type="text" placeholder="邮箱..." v-show='!email' @blur="email=$event.target.value" @keypress.enter="email=$event.target.value">
+                <span>联系电话：
+                  <span class="m-pointer" v-show="phoneNum" @click="inputEdit('phoneNum', 'myContactInfoRef')">{{phoneNum}}</span>
+                  <input
+                    ref="myContactInfoRef"
+                    class="list_box"
+                    type="text"
+                    maxlength="20"
+                    placeholder="联系电话..."
+                    v-show="!phoneNum"
+                    @blur="phoneNum=$event.target.value"
+                    @keypress.enter="phoneNum=$event.target.value"
+                    >
+                </span>
+                <br>
+                <span>邮箱：
+                  <span class="m-pointer" v-show="email" @click="inputEdit('email', 'myEmailRef')">{{email}}</span>
+                  <input
+                    ref="myEmailRef"
+                    class="list_box"
+                    type="text"
+                    maxlength="50"
+                    placeholder="邮箱...不超过50字符"
+                    v-show='!email'
+                    @blur="email=$event.target.value"
+                    @keypress.enter="email=$event.target.value"
+                    >
+                </span>
             </div>
         </div>
-        <div :class="[imgSrc? '':'dashed_border', 'head_pic']" @click="imgSrc = ''">
+        <div v-show="!isHideAvatar" :class="[imgSrc? '':'dashed_border', 'head_pic']" @click="imgSrc = ''">
             <img :src="imgSrc" alt="头像" v-show="imgSrc">
-            <input type="file" @change="headPic">
+            <input type="file" @change="headPic" :accept="acceptSuffix">
         </div>
     </header>
     <main>
       <!-- 组件展示区域 -->
-      <div :is="obj.component" v-for="(obj,index) in componentArr" :key="index"></div>
+      <div :is="obj.component" v-for="(obj,index) in componentArr" :key="index" style="margin-top:20px"></div>
       <!-- 操作区域 -->
-      <div :class="border1px" v-show="!isComplete" style="margin-bottom:20px">
+      <operationArea @saveData="saveData"></operationArea>
+      <!-- <div :class="border1px" v-show="!isComplete" style="margin-bottom:20px">
         <select id="theme" @change="getOptionValue ($event)">
           <option value="" selected>未选择</option>
           <option value="edu_exp">教育经历</option>
@@ -51,7 +133,7 @@
         <button @click="saveData">保存页面数据</button>
         <button @click="clearStorage">清除已存数据</button>
         <div class="tip"><span title="编辑完简历按下Ctrl+P">鼠标放在我上面，告诉你如何将网页另存为PDF简历？</span></div>
-      </div>
+      </div> -->
     </main>
   </div>
 </template>
@@ -61,12 +143,15 @@ import edu from './components/edu_exp'
 import work from './components/work_exp'
 import project from './components/project_exp'
 import skills from './components/skills'
-import self_evaluation from './components/self_evaluation'
+import selfEvaluation from './components/self_evaluation'
+import mixins from './mixins/index'
+import operationArea from './components/operation.vue'
 
 export default {
+  mixins: [mixins],
   data () {
     return {
-      name: '', // 名字
+      myName: '', // 名字
       age: null, // 年龄
       workYear: NaN, // 工作年限
       jobPost: '', // 应聘岗位
@@ -80,7 +165,10 @@ export default {
       componentArr: [], // 存储组件对象的数组
       isComplete: false, // 是否隐藏页面全部按钮
       border1px: 'border1px',
-      resume: {}
+      resume: {},
+      isEditMode: true, // 是否是编辑模式
+      acceptSuffix: ['.jpg', '.jpeg', '.png', '.bmp'].join(','), // 头像接受的图片格式
+      isHideAvatar: false
     }
   },
   methods: {
@@ -104,7 +192,7 @@ export default {
     },
     // 隐藏全部按钮及输入框
     hiddenAll () {
-      if(confirm('请确认简历所有内容已输入完毕，确认后按钮将不可用。隐藏完所有按钮后，按下Ctrl+P可将简历另存为PDF')){
+      if (confirm('请确认简历所有内容已输入完毕，确认后按钮将不可用。隐藏完所有按钮后，按下Ctrl+P可将简历另存为PDF')) {
         PubSub.publish('hidden')
         this.isComplete = true
       }
@@ -121,7 +209,7 @@ export default {
     // 缓存数据到本地
     saveData () {
       let base = {
-        name: this.name,
+        myName: this.myName,
         age: this.age,
         workYear: this.workYear,
         jobPost: this.jobPost,
@@ -150,7 +238,7 @@ export default {
     },
     // 一次性添加所有子组件
     addAll () {
-      let arr = [edu, skills, work, project, self_evaluation] // 顺序固定，并且要与页面的option的index一一对应
+      let arr = [edu, skills, work, project, selfEvaluation] // 顺序固定，并且要与页面的option的index一一对应
       let index = []
       if (this.componentArr.length > 0) { // 如果原数组已经存有组件，则遍历它的id
         this.componentArr.map(item => {
@@ -189,11 +277,10 @@ export default {
     },
     // 删除一个组件
     deleteOne () {
-      if(this.componentIndex){
+      if (this.componentIndex) {
         const newArr = this.componentArr.filter(obj => obj.id !== this.componentIndex)
         this.componentArr = newArr
-      }
-      else{
+      } else {
         alert('请在左边下拉框选择要删除的条目')
       }
     },
@@ -215,7 +302,7 @@ export default {
           cname = project
           break
         case 'self_evaluation':
-          cname = self_evaluation
+          cname = selfEvaluation
           break
       }
       // 选中的子组件展示到页面
@@ -231,12 +318,13 @@ export default {
     skills,
     work,
     project,
-    self_evaluation
+    selfEvaluation,
+    operationArea
   },
   // 检测并获取localstorage
   created () {
     let resume = window.localStorage.getItem('resume')
-    let list = ['name', 'age', 'workYear', 'jobPost', 'phoneNum', 'email', 'myHome', 'imgSrc']
+    let list = ['myName', 'age', 'workYear', 'jobPost', 'phoneNum', 'email', 'myHome', 'imgSrc']
     if (resume) {
       let base = JSON.parse(resume)['base']
       list.map(item => {
@@ -250,6 +338,15 @@ export default {
     PubSub.subscribe('submitData', (msg, data) => {
       Object.assign(this.resume, data)
       this.setLocal()
+    })
+    PubSub.subscribe('hideAvatar', (msg, data) => {
+      this.isHideAvatar = data
+    })
+    PubSub.subscribe('hidden', (msg, data) => {
+      this.isEditMode = false
+    })
+    PubSub.subscribe('editing', (msg, data) => {
+      this.isEditMode = true
     })
   }
 }
@@ -270,6 +367,8 @@ export default {
       color blue
 #app
   width 100%
+  padding-left 40px
+  padding-right 40px
   margin auto
 .personal_info
   .info
@@ -299,10 +398,26 @@ export default {
       z-index 2
       margin 0
       padding 0
+      cursor pointer
     img
       position absolute
       height 100%
       width 100%
       margin 0
       z-index 3
+      cursor pointer
+.app_pd-tp-bm
+  padding-top 40px
+  padding-bottom 40px
+  border 1px solid #ccc
+.main-title
+  font-size 2em
+  text-align center
+.my_name_label
+  font-size 2em
+  font-weight bold
+.my_name_input
+  line-height 34px
+  width 150px
+  font-size 2em
 </style>

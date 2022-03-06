@@ -75,19 +75,18 @@ export default {
     },
     // 将输入框数据提交到展示框
     submitOne () {
-      if(this.company && this.workYear && this.job && this.address && this.workContent){
+      if (this.company && this.workYear && this.job && this.address && this.workContent) {
         let data = {
-        company: this.company,
-        workYear: this.workYear,
-        job: this.job,
-        address: this.address,
-        workContent: Object.assign(this.workContent, this.lists)
-      }
-      this.workInfo.push(Object.assign({}, data))
-      this.clearData()
-      this.isAdd = false
-      }
-      else{
+          company: this.company,
+          workYear: this.workYear,
+          job: this.job,
+          address: this.address,
+          workContent: Object.assign(this.workContent, this.lists)
+        }
+        this.workInfo.push(Object.assign({}, data))
+        this.clearData()
+        this.isAdd = false
+      } else {
         alert('请输入完整的内容再提交！')
       }
     },
@@ -99,13 +98,29 @@ export default {
       this.address = ''
       this.lists = [{list: ''}]
       this.workContent = []
+    },
+    addOneEmptyExp () {
+      const data = {
+        company: undefined,
+        workYear: undefined,
+        job: undefined,
+        address: undefined,
+        workContent: undefined
+      }
+      this.workInfo.push(data)
     }
   },
   created () {
     let resume = window.localStorage.getItem('resume')
     if (resume) {
       this.workInfo = JSON.parse(resume)['work']
-      this.isAdd = false
+      if (this.workInfo.length === 0) {
+        this.isAdd = true
+      } else {
+        this.isAdd = false
+      }
+    } else {
+      this.isAdd = true
     }
   },
   mounted () {
@@ -115,6 +130,9 @@ export default {
     PubSub.subscribe('hidden', () => {
       this.hiddenAll = true
     })
+    PubSub.subscribe('editing', (msg, data) => {
+      this.hiddenAll = false
+    })
   },
   // 销毁子组件的save订阅事件
   beforeDestroy () {
@@ -122,7 +140,7 @@ export default {
   }
 }
 </script>
-<style lang="stylus">
+<style lang="stylus" scoped>
 .add_exp
   margin 3px 5px
 div.work_exp

@@ -91,7 +91,7 @@ module.exports = {
     child_process: 'empty'
   },
   plugins: [
-    new webpack.ProvidePlugin({
+    new webpack.ProvidePlugin({ // 全局变量在这里引入可以免去在文件其他地方import或require
       PubSub: "pubsub-js"
     }),
   ]

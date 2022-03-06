@@ -22,10 +22,9 @@ export default {
     // 提交输入框内容到展示框
     submitText () {
       let text = document.querySelector('.edit-box').textContent
-      if(text!=''){
+      if (text !== '') {
         this.selfEvaluation = text
-      }
-      else{
+      } else {
         alert('请输入内容！')
       }
     },
@@ -57,7 +56,7 @@ export default {
   }
 }
 </script>
-<style lang="stylus">
+<style lang="stylus" scoped>
 div.self_evaluation
   .content
     text-indent 2em
@@ -65,7 +64,7 @@ div.self_evaluation
   .edit-box
     width 100%
     border 1px solid gray
-    min-height 10vw
+    min-height 5vw
     outline none
     border-radius 3px
     margin 0

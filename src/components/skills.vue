@@ -4,28 +4,47 @@
         <ul class="skills_lists">
             <!-- 展示区 -->
             <li v-for="(obj,index) in skillInfo" :key='index'>
-                <h4 class="name">{{obj.skillName}}:</h4>
-                <p class="describe">{{obj.content}} <input :id="index" type="button" value="删除" @click="deleteOne($event)"></p>
-            </li>
-            <!-- 输入区 -->
-            <li v-if="newAdd" :class="[hiddenAll? hiddenClass:'']">
-                <input class="title-style" placeholder="技能名称..." v-model="skillName">:
-                <div class="content-style" contenteditable="plaintext-only" autocomplete="off"></div>
-                <button class="submit-content" @click="contentDetection()">提交</button>
+                <span style="white-space:nowrap">
+                  <h4 v-show="obj.skillName" class="name m-pointer" @click="obj.skillName = undefined;inputEdit(null, `skillNameRef${index}`)">{{obj.skillName}}</h4>
+                  <input
+                    :ref="'skillNameRef'+index"
+                    style="line-height: 16px;"
+                    v-show="!obj.skillName"
+                    type="text"
+                    maxlength="20"
+                    placeholder="技能名称..."
+                    @blur="obj.skillName = $event.target.value"
+                    @keypress.enter="obj.skillName = $event.target.value"
+                    >
+                  :
+                </span>
+                <span style="width: 72%">
+                  <p v-show="obj.content" class="describe m-pointer" @click="obj.content = undefined;inputEdit(null, `skillDescRef${index}`)">{{obj.content}}
+                    <input :id="index" type="button" value="删除" @click="deleteOne($event)">
+                  </p>
+                  <input
+                    :ref="'skillDescRef'+index"
+                    style="width: 100%; line-height:16px"
+                    v-show="!obj.content"
+                    type="text"
+                    placeholder="技能名称描述.."
+                    @blur="obj.content = $event.target.value"
+                    @keypress.enter="obj.content = $event.target.value"
+                    >
+                </span>
             </li>
         </ul>
-        <div class="add" v-show="!newAdd" :class="[hiddenAll? hiddenClass:'']">
-            <div @click="addOne">添加新技能</div>
-        </div>
     </div>
 </template>
 <script>
+import mixins from '@/mixins/index'
+
 export default {
+  mixins: [mixins],
   data () {
     return {
       hiddenAll: false, // 控制按钮显示
       hiddenClass: 'hidden',
-      newAdd: true, // 控制输入框是否显示
       skillName: '', // 技能名称
       content: '', // 技能描述
       skillInfo: [], // 所有技能信息
@@ -35,33 +54,36 @@ export default {
   methods: {
     // 添加新技能
     addOne () {
-      if (this.newAdd) {
-        alert('已存在未编辑的输入框，不能添加！')
-      } else {
-        this.newAdd = true
+      if (this.skillInfo.length > 0) {
+        const length = this.skillInfo.length
+        if (!this.skillInfo[length - 1].skillName || !this.skillInfo[length - 1].content) {
+          alert('存在没有编辑的技能项，请编辑完后再添加')
+          return
+        }
       }
-    },
-    // 输入框内容提交检测和提交处理
-    contentDetection (event) {
-      let content = document.querySelector('.content-style').textContent
-      this.content = content
-      if (this.skillName === '' || this.content === '') {
-        alert('请输入完整的技能名称和内容后再提交！')
-        return
-      }
-      this.skillInfo.push({skillName: this.skillName, content: this.content})
-      this.newAdd = false
+      this.skillInfo.push(
+        {
+          skillName: '',
+          content: ''
+        }
+      )
     },
     // 删除该条内容
     deleteOne (e) {
-      this.skillInfo.splice(e.target.id, 1)
+      if (confirm('确定要删除吗?')) {
+        this.skillInfo.splice(e.target.id, 1)
+      }
     }
   },
   created () {
     let resume = window.localStorage.getItem('resume')
     if (resume) {
       this.skillInfo = JSON.parse(resume)['skills']
-      this.newAdd = false
+    } else {
+      this.skillInfo.push({
+        skillName: '',
+        content: ''
+      })
     }
   },
   mounted () {
@@ -70,6 +92,12 @@ export default {
     })
     PubSub.subscribe('hidden', (msg, data) => {
       this.hiddenAll = true
+    })
+    PubSub.subscribe('addOneSkill', (msg, data) => {
+      this.addOne()
+    })
+    PubSub.subscribe('editing', (msg, data) => {
+      this.hiddenAll = false
     })
   },
   beforeDestroy () {
