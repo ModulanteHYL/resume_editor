@@ -147,6 +147,7 @@ div.work_exp
   .work
     margin-bottom 3px
     ul.work_content
+      list-style disc
       .add_items
         visibility hidden
       &:hover .add_items
