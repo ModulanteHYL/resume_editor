@@ -1,0 +1,76 @@
+border = 1px solid #c8c8dc
+*
+  box-sizing border-box
+  margin-left 5px
+  margin-right 5px
+  // font-family arial
+body
+  width 922px
+  margin auto
+  box-sizing border-box
+p
+  margin 0
+li
+  margin 0 0 5px
+h3
+  margin-bottom 0
+h4
+  margin 0
+ul
+  margin 0 0 15px
+  list-style: none
+input
+  border-radius 5px
+  border 1px solid rgb(200,200,220)
+  padding-left 3px
+  font-size: .8rem
+.delete_data
+  display none
+.hr
+  background-color #ccc
+  &::after
+    content ''
+    display block
+    border 2px solid rgb(138, 135, 135)
+    margin 8px 0
+  &:hover .delete_data
+    display inline-block
+.clearfix::after
+  content ''
+  display block
+  clear both
+  width 0
+  height 0
+.list_box
+  line-height 1.2rem
+  margin 2px 
+.content_box
+  width 99%
+  line-height 1.2rem
+  margin 2px 
+.dashed_border
+  border 2px dashed #808080
+.submit-content
+  width 5vw
+  outline none
+  opacity .8   
+.title-style
+  border border
+  border-radius 5px
+  height 1.8rem
+  width 15vw
+  margin 0
+.content-style
+  min-height 1.8rem
+  border-radius 5px
+  border border
+  width 70vw
+  margin 0
+.hidden
+  display none
+button,input[type=button]
+  cursor pointer
+  &:hover
+    background rgb(200,200,200)
+.m-pointer
+  cursor pointer
