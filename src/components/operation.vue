@@ -25,14 +25,16 @@
               <button @click="hideAvatar">{{isHideAvatar?'显示':'隐藏'}}头像框</button>
             </li>
             <li>
-              <span>按下Ctrl+Q可以展示菜单</span>
+              <span>Ctrl+Q进入编辑模式</span>
+            </li>
+            <li>
+              <span>Ctrl+P保存简历为PDF</span>
             </li>
           </ul>
         </div>
       </main>
       <footer>
         <div style="text-align: center">
-          <button>按下Ctrl+P会隐藏菜单并将简历保存为PDF</button>
         </div>
       </footer>
   </div>
@@ -104,7 +106,7 @@ ul
   position fixed
   left 0
   top 15%
-  width 200px
+  width 225px
   height 600px
   border 1px solid #ccc
   border-radius 5px
@@ -115,5 +117,5 @@ ul
   margin 0
   margin-bottom 20px
 .hide-menu
-  left -205px
+  left -250px
 </style>
