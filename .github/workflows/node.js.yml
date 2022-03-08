@@ -25,9 +25,11 @@ jobs:
         cache: 'npm'
     - run: npm install
     - run: npm run build
+    - run: mkdir prod
+    - run: mv ./dist ./prod
     - name: Deploy
       uses: JamesIves/github-pages-deploy-action@v4.2.5
       with:
         ACCESS_TOKEN: ${{ secrets.ACCESS_TOKEN }}
         BRANCH: release
-        folder: ./dist
+        folder: ./prod
