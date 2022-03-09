@@ -13,7 +13,7 @@
               <button @click="addSkill">增加一条专业技能</button>
             </li>
             <li>
-              <button @click="addWorkExp" disabled>增加一条工作经历</button>
+              <button @click="addWorkExp">增加一条工作经历</button>
             </li>
             <li>
               <button @click="addProjectExp" disabled>增加一条项目经验</button>
@@ -68,7 +68,7 @@ export default {
       PubSub.publish('addOneSkill')
     },
     addWorkExp () {
-
+      PubSub.publish('order_AddOneExp')
     },
     addProjectExp () {
 

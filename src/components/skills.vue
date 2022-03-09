@@ -27,7 +27,7 @@
                     style="width: 100%; line-height:16px"
                     v-show="!obj.content"
                     type="text"
-                    placeholder="技能名称描述.."
+                    placeholder="技能使用情况描述.."
                     @blur="obj.content = $event.target.value"
                     @keypress.enter="obj.content = $event.target.value"
                     >

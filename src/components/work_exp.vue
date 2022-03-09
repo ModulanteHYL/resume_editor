@@ -18,42 +18,17 @@
                 </ul>
             </div>
         </div>
-        <div v-if="isAdd" :class="[hiddenAll? hiddenClass : '','dashed_border']">
-            <div class="work">
-                <div class="company_info clearfix">
-                    <h4><input class="list_box" type="text" placeholder="公司名称..." v-model="company"></h4>
-                    <span><input class="list_box" type="text" placeholder="入职时间-离职时间..." v-model="workYear"></span>
-                </div>
-                <div class="company_info clearfix">
-                    <span>岗位：<input class="list_box" type="text" v-model="job"></span>
-                    <span>地点：<input class="list_box" type="text" v-model="address"></span>
-                </div>
-                <ul class="work_content">
-                    <li v-for="(obj,index) in lists" :key="index">
-                        <p><input class="content_box" type="text" placeholder="职责..." v-model="obj.list"></p>
-                    </li>
-                    <button class="add_items" @click="addOneList()">添加一条职责</button>
-                    <button style="margin-left:72%" @click="submitOne()">提交本条经历</button>
-                </ul>
-            </div>
-        </div>
-        <button v-show="!isAdd" :class="[hiddenAll? hiddenClass : '','add_exp']" @click="addOneExp()">添加一条经历</button>
+        <WorkExpTemplate v-if="isAdd" @addOneExp="addOneExp"></WorkExpTemplate>
     </div>
 </template>
 <script>
+import WorkExpTemplate from '@/reuse/work_exp_template.vue'
+
 export default {
   data () {
     return {
-      company: '', // 公司名称
-      workYear: '', // 工作年限
-      job: '', // 岗位
-      address: '', // 公司地点
-      lists: [{list: ''}], // 输入框的职责描述
-      workContent: [], // 展示框的职责描述
       workInfo: [], // 工作经历的最终所有信息
       isAdd: true, // 控制输入框是否显示
-      hiddenAll: false, // 隐藏所有按钮和输入框
-      hiddenClass: 'hidden', // 执行css的hidden类
       subscribe: null
     }
   },
@@ -63,52 +38,14 @@ export default {
       alert('只删除了页面的数据，如果希望同时删除浏览器缓存中的数据，请再点击‘保存页面数据’进行覆盖')
       this.workInfo = []
     },
-    // 增加一条职责
-    addOneList () {
-      if (this.lists[this.lists.length - 1].list) {
-        this.lists.push({list: ''})
-      }
-    },
-    // 添加一条工作经历
-    addOneExp () {
-      this.isAdd = true
-    },
-    // 将输入框数据提交到展示框
-    submitOne () {
-      if (this.company && this.workYear && this.job && this.address && this.workContent) {
-        let data = {
-          company: this.company,
-          workYear: this.workYear,
-          job: this.job,
-          address: this.address,
-          workContent: Object.assign(this.workContent, this.lists)
-        }
-        this.workInfo.push(Object.assign({}, data))
-        this.clearData()
-        this.isAdd = false
-      } else {
-        alert('请输入完整的内容再提交！')
-      }
-    },
-    // 清除输入框数据
-    clearData () {
-      this.company = ''
-      this.workYear = ''
-      this.job = ''
-      this.address = ''
-      this.lists = [{list: ''}]
-      this.workContent = []
-    },
-    addOneEmptyExp () {
-      const data = {
-        company: undefined,
-        workYear: undefined,
-        job: undefined,
-        address: undefined,
-        workContent: undefined
-      }
+    // 新增一条工作经验
+    addOneExp (data) {
       this.workInfo.push(data)
+      this.isAdd = false
     }
+  },
+  components: {
+    WorkExpTemplate
   },
   created () {
     let resume = window.localStorage.getItem('resume')
@@ -128,10 +65,19 @@ export default {
       PubSub.publish('submitData', {work: Object.assign([], this.workInfo)})
     })
     PubSub.subscribe('hidden', () => {
-      this.hiddenAll = true
+      this.isAdd = false
     })
     PubSub.subscribe('editing', (msg, data) => {
-      this.hiddenAll = false
+      if (this.workInfo.length === 0) {
+        this.isAdd = true
+      }
+    })
+    PubSub.subscribe('order_AddOneExp', () => {
+      if (this.isAdd) {
+        alert('存在没有提交的工作经验，不能新增!')
+        return
+      }
+      this.isAdd = true
     })
   },
   // 销毁子组件的save订阅事件
