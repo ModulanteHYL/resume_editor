@@ -16,7 +16,7 @@
               <button @click="addWorkExp">增加一条工作经历</button>
             </li>
             <li>
-              <button @click="addProjectExp" disabled>增加一条项目经验</button>
+              <button @click="addProjectExp">增加一条项目经验</button>
             </li>
             <li>
               <button @click="saveData">保存数据到浏览器</button>
@@ -68,10 +68,10 @@ export default {
       PubSub.publish('addOneSkill')
     },
     addWorkExp () {
-      PubSub.publish('order_AddOneExp')
+      PubSub.publish('order_AddOneWorkExp')
     },
     addProjectExp () {
-
+      PubSub.publish('order_AddOneProjExp')
     },
     saveData () {
       this.$emit('saveData')

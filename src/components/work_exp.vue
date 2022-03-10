@@ -1,7 +1,7 @@
 <template>
     <div class="work_exp">
-        <h3 class="hr">工作经历<button class="delete_data" @click="deleteWorkData()">删除已输入数据</button></h3>
-        <div v-if="workInfo">
+        <h3 class="hr">工作经历<button class="delete_data" @click="deleteWorkData()">删除全部已输入数据</button></h3>
+        <div v-if="workInfo.length > 0">
             <div class="work" v-for="(obj,index) in workInfo" :key="index">
                 <div class="company_info clearfix">
                     <h4>{{obj.company}}</h4>
@@ -16,9 +16,10 @@
                         <p>{{items.list}}</p>
                     </li>
                 </ul>
+                <!-- <div class="delete_work_exp" @click="deleteOneExp(index)">x</div> -->
             </div>
         </div>
-        <WorkExpTemplate v-if="isAdd" @addOneExp="addOneExp"></WorkExpTemplate>
+        <WorkExpTemplate v-if="isAdd" @addOneWorkExp="addOneWorkExp"></WorkExpTemplate>
     </div>
 </template>
 <script>
@@ -38,9 +39,23 @@ export default {
       alert('只删除了页面的数据，如果希望同时删除浏览器缓存中的数据，请再点击‘保存页面数据’进行覆盖')
       this.workInfo = []
     },
+    // 删除一条数据
+    deleteOneExp (index) {
+      if (confirm('确定删除改条项目经验吗?')) {
+        this.workInfo.splice(index, 1)
+      }
+    },
     // 新增一条工作经验
-    addOneExp (data) {
+    addOneWorkExp (data) {
       this.workInfo.push(data)
+      this.closeAddWorkExp()
+    },
+    // 打开添加功能
+    openAddWorkExp () {
+      this.isAdd = true
+    },
+    // 关闭添加功能
+    closeAddWorkExp () {
       this.isAdd = false
     }
   },
@@ -52,12 +67,12 @@ export default {
     if (resume) {
       this.workInfo = JSON.parse(resume)['work']
       if (this.workInfo.length === 0) {
-        this.isAdd = true
+        this.openAddWorkExp()
       } else {
-        this.isAdd = false
+        this.closeAddWorkExp()
       }
     } else {
-      this.isAdd = true
+      this.openAddWorkExp()
     }
   },
   mounted () {
@@ -65,19 +80,19 @@ export default {
       PubSub.publish('submitData', {work: Object.assign([], this.workInfo)})
     })
     PubSub.subscribe('hidden', () => {
-      this.isAdd = false
+      this.closeAddWorkExp()
     })
     PubSub.subscribe('editing', (msg, data) => {
       if (this.workInfo.length === 0) {
-        this.isAdd = true
+        this.openAddWorkExp()
       }
     })
-    PubSub.subscribe('order_AddOneExp', () => {
+    PubSub.subscribe('order_AddOneWorkExp', () => {
       if (this.isAdd) {
         alert('存在没有提交的工作经验，不能新增!')
         return
       }
-      this.isAdd = true
+      this.openAddWorkExp()
     })
   },
   // 销毁子组件的save订阅事件
@@ -92,6 +107,18 @@ export default {
 div.work_exp
   .work
     margin-bottom 3px
+    position relative
+    .delete_work_exp
+      position: absolute;
+      width: 15px;
+      height: 15px;
+      background-color: #ccc;
+      line-height: 12px;
+      font-weight: bold;
+      text-align: center;
+      top: -7px;
+      right: -18px;
+      cursor pointer
     ul.work_content
       list-style disc
       .add_items

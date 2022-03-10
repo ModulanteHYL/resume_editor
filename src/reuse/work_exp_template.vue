@@ -36,7 +36,7 @@ export default {
       this.workContent.push({list: ''})
     },
     submitOne () {
-      this.$emit('addOneExp', {
+      this.$emit('addOneWorkExp', {
         company: this.company,
         workYear: this.workYear,
         job: this.job,

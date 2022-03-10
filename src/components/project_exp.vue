@@ -1,7 +1,7 @@
 <template>
     <div class="project_exp">
         <h3 class="hr">项目经验<button class="delete_data" @click="deleteProData()">删除已输入数据</button></h3>
-        <div v-if="projectInfo">
+        <div v-if="projectInfo.length > 0">
             <ul class="row" v-for="(obj,index) in projectInfo" :key="index">
                 <h4>{{obj.proName}}</h4>
                 <li>
@@ -18,37 +18,16 @@
                 </li>
             </ul>
         </div>
-        <ul :class="[hiddenAll? hiddenClass: '','row','dashed_border','edit_box']" v-if="isAdd">
-            <h4><input class="list_box" type="text" placeholder="项目名称..." v-model="proName"></h4>
-            <li>
-                <span>项目描述：</span>
-                <section><textarea class="content-style style_supply"  @input="proDescribe=$event.target.value"></textarea></section>
-            </li>
-            <li>
-                <span>主要负责：</span>
-                <section><textarea class="content-style style_supply"  @input="myDuty=$event.target.value"></textarea></section>
-            </li>
-            <li v-for="(item,index) in inputOther" :key="index">
-                <span class="other_item">
-                  <input class="list_box" type="text" v-model="item.title">:
-                </span>
-                <section><textarea class="content-style style_supply" @input="item.content=$event.target.value"></textarea></section>
-            </li>
-            <button class="add_item" @click="addDescribe()">添加其他项</button>
-            <button class="add_project" @click="submitProject()">提交本条经验</button>
-        </ul>
-        <button :class="[hiddenAll? hiddenClass: '']" v-show="!isAdd" @click="addProject()">添加项目经验</button>
+        <ProjectExpTemplateVue v-if="isAdd" @addOneProjExp="addOneProjExp"></ProjectExpTemplateVue>
     </div>
 </template>
 <script>
+import ProjectExpTemplateVue from '@/reuse/project_exp_template.vue'
+
 export default {
   data () {
     return {
       isAdd: true,
-      proName: '', // 项目名称
-      proDescribe: '', // 项目描述
-      myDuty: '', // 我的职责
-      inputOther: [], // 其他描述
       projectInfo: [
         // {
         //   proName: '',
@@ -62,35 +41,20 @@ export default {
         //   ]
         // }
       ],
-      hiddenAll: false,
-      hiddenClass: 'hidden',
       subscribe: null
     }
+  },
+  components: {
+    ProjectExpTemplateVue
   },
   methods: {
     deleteProData () {
       alert('只删除了页面的数据，如果希望同时删除浏览器缓存中的数据，请再点击‘保存页面数据’进行覆盖')
       this.projectInfo = []
     },
-    // 添加其他描述项
-    addDescribe () {
-      this.inputOther.push({title: null, content: null})
-    },
-    // 提交内容
-    submitProject () {
-      if (this.proName && this.proDescribe && this.myDuty) {
-        let data = {
-          proName: this.proName,
-          proDescribe: this.proDescribe,
-          myDuty: this.myDuty,
-          other: Object.assign([], this.inputOther)
-        }
-        this.projectInfo.push(Object.assign({}, data))
-        this.clearData()
-        this.isAdd = false
-      } else {
-        alert('请输入完整信息后再提交！')
-      }
+    addOneProjExp (data) {
+      this.projectInfo.push(data)
+      this.closeAddProjExp()
     },
     // 清除表层输入框数据
     clearData () {
@@ -100,8 +64,12 @@ export default {
       this.inputOther = []
     },
     // 新增
-    addProject () {
+    openAddProjExp () {
       this.isAdd = true
+    },
+    // 关闭添加窗口
+    closeAddProjExp () {
+      this.isAdd = false
     }
   },
   created () {
@@ -109,12 +77,12 @@ export default {
     if (resume) {
       this.projectInfo = JSON.parse(resume)['project']
       if (this.projectInfo.length === 0) {
-        this.isAdd = true
+        this.openAddProjExp()
       } else {
-        this.isAdd = false
+        this.closeAddProjExp()
       }
     } else {
-      this.isAdd = true
+      this.openAddProjExp()
     }
   },
   mounted () {
@@ -122,10 +90,19 @@ export default {
       PubSub.publish('submitData', {project: Object.assign([], this.projectInfo)})
     })
     PubSub.subscribe('hidden', () => {
-      this.hiddenAll = true
+      this.closeAddProjExp()
     })
     PubSub.subscribe('editing', (msg, data) => {
-      this.hiddenAll = false
+      if (this.projectInfo.length === 0) {
+        this.openAddProjExp()
+      }
+    })
+    PubSub.subscribe('order_AddOneProjExp', () => {
+      if (this.isAdd) {
+        alert('存在没有编辑的项目经验，不能新增')
+        return
+      }
+      this.openAddProjExp()
     })
   },
   beforeDestroy () {
