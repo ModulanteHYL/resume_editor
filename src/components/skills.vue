@@ -2,7 +2,7 @@
     <div class="skills">
         <h3 class="hr">专业技能</h3>
         <ul class="skills_lists">
-            <li v-for="(obj,index) in skillInfo" :key='index'>
+            <li v-for="(obj,index) in skillInfo" :key='index' v-border-tip="isDelete">
                 <span style="white-space:nowrap">
                   <h4 v-show="obj.skillName" v-coms-pointer class="name" @click="obj.skillName = undefined;inputEdit(null, `skillNameRef${index}`)">{{obj.skillName}}</h4>
                   <input
@@ -18,9 +18,7 @@
                   :
                 </span>
                 <span style="width: 90%">
-                  <p v-show="obj.content" v-coms-pointer class="describe" @click="obj.content = undefined;inputEdit(null, `skillDescRef${index}`)">{{obj.content}}
-                    <input :id="index" type="button" value="删除" @click="deleteOne($event)">
-                  </p>
+                  <p v-show="obj.content" v-coms-pointer class="describe" @click="obj.content = undefined;inputEdit(null, `skillDescRef${index}`)">{{obj.content}}</p>
                   <input
                     :ref="'skillDescRef'+index"
                     style="width: 100%; line-height:16px"
@@ -31,6 +29,7 @@
                     @keypress.enter="obj.content = $event.target.value"
                     >
                 </span>
+                <div v-if="isDelete" v-delete-btn @click="skillInfo.splice(index,1)"></div>
             </li>
         </ul>
         <div>
@@ -55,19 +54,14 @@ export default {
         // }
       ], // 所有技能信息
       subscribe: null,
-      isAdd: false
+      isAdd: false,
+      isDelete: false
     }
   },
   components: {
     SkillsTemplateVue
   },
   methods: {
-    // 删除该条内容
-    deleteOne (e) {
-      if (confirm('确定要删除吗?')) {
-        this.skillInfo.splice(e.target.id, 1)
-      }
-    },
     addOneSkill (data) {
       this.skillInfo.push(data)
       this.closeAddOneSkill()
@@ -77,6 +71,13 @@ export default {
     },
     closeAddOneSkill () {
       this.isAdd = false
+    },
+    openDeleteMode () {
+      this.isDelete = true
+      this.closeAddOneSkill()
+    },
+    closeDeleteMode () {
+      this.isDelete = false
     }
   },
   created () {
@@ -98,6 +99,7 @@ export default {
     })
     PubSub.subscribe('hidden', (msg, data) => {
       this.closeAddOneSkill()
+      this.closeDeleteMode()
     })
     PubSub.subscribe('order_AddOneSkill', (msg, data) => {
       if (this.isAdd) {
@@ -107,6 +109,15 @@ export default {
       this.openAddOneSkill()
     })
     PubSub.subscribe('editing', (msg, data) => {
+      if (this.skillInfo.length === 0) {
+        this.openAddOneSkill()
+      }
+    })
+    PubSub.subscribe('order_EnterDeleteMode', () => {
+      this.openDeleteMode()
+    })
+    PubSub.subscribe('order_ExitDeleteMode', () => {
+      this.closeDeleteMode()
       if (this.skillInfo.length === 0) {
         this.openAddOneSkill()
       }

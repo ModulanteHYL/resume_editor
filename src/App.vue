@@ -197,6 +197,7 @@ export default {
       this.setLocal()
       PubSub.publish('save')
       console.log(this.resume)
+      alert('保存成功')
     },
     // 执行缓存
     setLocal () {

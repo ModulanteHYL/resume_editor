@@ -1,8 +1,8 @@
 <template>
     <div class="project_exp">
-        <h3 class="hr">项目经验<button class="delete_data" @click="deleteProData()">删除全部已输入数据</button></h3>
+        <h3 class="hr">项目经验</h3>
         <div v-if="projectInfo.length > 0">
-            <ul class="row" v-for="(obj,index) in projectInfo" :key="index">
+            <ul class="row" v-for="(obj,index) in projectInfo" :key="index" v-border-tip="isDelete">
                 <h4>{{obj.proName}}</h4>
                 <li>
                     <span class="pro_span">项目描述：</span><br>
@@ -16,6 +16,7 @@
                     <span class="pro_span">{{item.title}}</span><br>
                     <section class="pro_section">{{item.content}}</section>
                 </li>
+                <div v-if="isDelete" v-delete-btn @click="projectInfo.splice(index,1)"></div>
             </ul>
         </div>
         <ProjectExpTemplateVue v-if="isAdd" @addOneProjExp="addOneProjExp"></ProjectExpTemplateVue>
@@ -28,6 +29,7 @@ export default {
   data () {
     return {
       isAdd: true,
+      isDelete: false,
       projectInfo: [
         // {
         //   proName: '',
@@ -48,20 +50,9 @@ export default {
     ProjectExpTemplateVue
   },
   methods: {
-    deleteProData () {
-      alert('只删除了页面的数据，如果希望同时删除浏览器缓存中的数据，请再点击‘保存页面数据’进行覆盖')
-      this.projectInfo = []
-    },
     addOneProjExp (data) {
       this.projectInfo.push(data)
       this.closeAddProjExp()
-    },
-    // 清除表层输入框数据
-    clearData () {
-      this.proName = ''
-      this.proDescribe = ''
-      this.myDuty = ''
-      this.inputOther = []
     },
     // 新增
     openAddProjExp () {
@@ -70,6 +61,13 @@ export default {
     // 关闭添加窗口
     closeAddProjExp () {
       this.isAdd = false
+    },
+    openDeleteMode () {
+      this.isDelete = true
+      this.closeAddProjExp()
+    },
+    closeDeleteMode () {
+      this.isDelete = false
     }
   },
   created () {
@@ -91,6 +89,7 @@ export default {
     })
     PubSub.subscribe('hidden', () => {
       this.closeAddProjExp()
+      this.closeDeleteMode()
     })
     PubSub.subscribe('editing', (msg, data) => {
       if (this.projectInfo.length === 0) {
@@ -103,6 +102,15 @@ export default {
         return
       }
       this.openAddProjExp()
+    })
+    PubSub.subscribe('order_EnterDeleteMode', () => {
+      this.openDeleteMode()
+    })
+    PubSub.subscribe('order_ExitDeleteMode', () => {
+      this.closeDeleteMode()
+      if (this.projectInfo.length === 0) {
+        this.openAddProjExp()
+      }
     })
   },
   beforeDestroy () {

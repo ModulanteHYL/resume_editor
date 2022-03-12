@@ -23,6 +23,27 @@ Vue.directive('text-center', {
     el.classList.add('m-text-center')
   }
 })
+Vue.directive('border-tip', {
+  inserted: function (el, bind) {
+    if (bind.value) {
+      el.classList.add('m-border-tip')
+    }
+  },
+  update: function (el, bind) {
+    if (bind.value) {
+      el.classList.add('m-border-tip')
+    } else {
+      el.classList.remove('m-border-tip')
+    }
+  }
+})
+Vue.directive('delete-btn', {
+  inserted: function (el, bind) {
+    el.parentNode.style.position = 'relative'
+    el.classList.add('m-delete-btn')
+    el.innerText = 'X'
+  }
+})
 new Vue({
   el: '#app',
   router,

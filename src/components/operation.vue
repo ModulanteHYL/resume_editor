@@ -7,16 +7,16 @@
         <div class="menu-area">
           <ul>
             <li>
-              <button @click="addEduExp">增加一条教育经历</button>
+              <button @click="addEduExp" :disabled="isDeleteMode">增加一条教育经历</button>
             </li>
             <li>
-              <button @click="addSkill">增加一条专业技能</button>
+              <button @click="addSkill" :disabled="isDeleteMode">增加一条专业技能</button>
             </li>
             <li>
-              <button @click="addWorkExp">增加一条工作经历</button>
+              <button @click="addWorkExp" :disabled="isDeleteMode">增加一条工作经历</button>
             </li>
             <li>
-              <button @click="addProjectExp">增加一条项目经验</button>
+              <button @click="addProjectExp" :disabled="isDeleteMode">增加一条项目经验</button>
             </li>
             <li>
               <button @click="saveData">保存数据到浏览器</button>
@@ -44,6 +44,12 @@
               </select>
             </li>
             <li>
+              <button @click="openDeleteFn">进入删除模式</button>
+            </li>
+            <li>
+              <button @click="closeDeleteFn">退出删除模式</button>
+            </li>
+            <li>
               <button @click="editComplete">完成编辑</button>
             </li>
           </ul>
@@ -61,7 +67,8 @@ export default {
   data () {
     return {
       isEditMode: true,
-      isHideAvatar: false
+      isHideAvatar: false,
+      isDeleteMode: false
     }
   },
   created () {
@@ -101,6 +108,7 @@ export default {
     },
     editComplete () {
       PubSub.publish('hidden')
+      this.isDeleteMode = false
     },
     deleteStorage () {
       PubSub.publish('deleteStorage')
@@ -108,6 +116,14 @@ export default {
     fontFamilyChange (event) {
       const styleData = event.target.value
       document.getElementById('app').style.setProperty('--font-theme', styleData)
+    },
+    openDeleteFn () {
+      PubSub.publish('order_EnterDeleteMode')
+      this.isDeleteMode = true
+    },
+    closeDeleteFn () {
+      PubSub.publish('order_ExitDeleteMode')
+      this.isDeleteMode = false
     }
   }
 }

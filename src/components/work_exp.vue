@@ -1,8 +1,8 @@
 <template>
     <div class="work_exp">
-        <h3 class="hr">工作经历<button class="delete_data" @click="deleteWorkData()">删除全部已输入数据</button></h3>
+        <h3 class="hr">工作经历</h3>
         <div v-if="workInfo.length > 0">
-            <div class="work" v-for="(obj,index) in workInfo" :key="index">
+            <div class="work" v-for="(obj,index) in workInfo" :key="index" v-border-tip="isDelete">
                 <div class="company_info clearfix">
                     <h4>{{obj.company}}</h4>
                     <span>{{obj.workYear}}</span>
@@ -16,7 +16,7 @@
                         <p>{{items.list}}</p>
                     </li>
                 </ul>
-                <!-- <div class="delete_work_exp" @click="deleteOneExp(index)">x</div> -->
+                <div v-if="isDelete" v-delete-btn @click="workInfo.splice(index,1)"></div>
             </div>
         </div>
         <WorkExpTemplate v-if="isAdd" @addOneWorkExp="addOneWorkExp"></WorkExpTemplate>
@@ -30,21 +30,11 @@ export default {
     return {
       workInfo: [], // 工作经历的最终所有信息
       isAdd: true, // 控制输入框是否显示
-      subscribe: null
+      subscribe: null,
+      isDelete: false
     }
   },
   methods: {
-    // 删除本项的数据
-    deleteWorkData () {
-      alert('只删除了页面的数据，如果希望同时删除浏览器缓存中的数据，请再点击‘保存页面数据’进行覆盖')
-      this.workInfo = []
-    },
-    // 删除一条数据
-    deleteOneExp (index) {
-      if (confirm('确定删除改条项目经验吗?')) {
-        this.workInfo.splice(index, 1)
-      }
-    },
     // 新增一条工作经验
     addOneWorkExp (data) {
       this.workInfo.push(data)
@@ -57,6 +47,13 @@ export default {
     // 关闭添加功能
     closeAddWorkExp () {
       this.isAdd = false
+    },
+    openDeleteMode () {
+      this.isDelete = true
+      this.closeAddWorkExp()
+    },
+    closeDeleteMode () {
+      this.isDelete = false
     }
   },
   components: {
@@ -81,6 +78,7 @@ export default {
     })
     PubSub.subscribe('hidden', () => {
       this.closeAddWorkExp()
+      this.closeDeleteMode()
     })
     PubSub.subscribe('editing', (msg, data) => {
       if (this.workInfo.length === 0) {
@@ -93,6 +91,15 @@ export default {
         return
       }
       this.openAddWorkExp()
+    })
+    PubSub.subscribe('order_EnterDeleteMode', () => {
+      this.openDeleteMode()
+    })
+    PubSub.subscribe('order_ExitDeleteMode', () => {
+      this.closeDeleteMode()
+      if (this.workInfo.length === 0) {
+        this.openAddWorkExp()
+      }
     })
   },
   // 销毁子组件的save订阅事件
@@ -108,17 +115,6 @@ div.work_exp
   .work
     margin-bottom 3px
     position relative
-    .delete_work_exp
-      position: absolute;
-      width: 15px;
-      height: 15px;
-      background-color: #ccc;
-      line-height: 12px;
-      font-weight: bold;
-      text-align: center;
-      top: -7px;
-      right: -18px;
-      cursor pointer
     ul.work_content
       list-style disc
       margin-left 48px

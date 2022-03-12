@@ -2,7 +2,7 @@
     <div class="edu_exp">
         <h3 class="hr">教育经历</h3>
         <div v-if="eduExpList.length > 0">
-          <div v-for="(obj, index) in eduExpList" :key="index" class="school">
+          <div v-for="(obj, index) in eduExpList" :key="index" class="school" v-border-tip="isDelete">
               <span>
                 <span v-coms-pointer v-show="obj.schoolName" @click="obj.schoolName = undefined;inputEdit(null,'mySchoolNameRef')">{{obj.schoolName}}</span>
                 <input
@@ -26,7 +26,7 @@
                   type="text"
                   maxlength="20"
                   style="width: 70%"
-                  placeholder="专业名称--本科/专科..."
+                  placeholder="专业名称"
                   @blur="obj.courseInfo=$event.target.value"
                   @keypress.enter="obj.courseInfo=$event.target.value"
                   >
@@ -58,6 +58,7 @@
                   @keypress.enter="obj.studyTime=$event.target.value"
                   >
               </span>
+              <div v-if="isDelete" v-delete-btn @click="eduExpList.splice(index,1)"></div>
           </div>
         </div>
         <div v-if="isAdd" style="margin-top:10px">
@@ -82,7 +83,8 @@ export default {
         // }
       ],
       subscribe: null,
-      isAdd: false
+      isAdd: false,
+      isDelete: false
     }
   },
   components: {
@@ -115,8 +117,18 @@ export default {
     })
     PubSub.subscribe('hidden', (msg, data) => {
       this.closeAddEduExp()
+      this.closeDeleteMode()
     })
     PubSub.subscribe('editing', (msg, data) => {
+      if (this.eduExpList.length === 0) {
+        this.openAddEduExp()
+      }
+    })
+    PubSub.subscribe('order_EnterDeleteMode', () => {
+      this.openDeleteMode()
+    })
+    PubSub.subscribe('order_ExitDeleteMode', () => {
+      this.closeDeleteMode()
       if (this.eduExpList.length === 0) {
         this.openAddEduExp()
       }
@@ -128,6 +140,13 @@ export default {
     },
     closeAddEduExp () {
       this.isAdd = false
+    },
+    openDeleteMode () {
+      this.isDelete = true
+      this.closeAddEduExp()
+    },
+    closeDeleteMode () {
+      this.isDelete = false
     },
     addOneEduExp (data) {
       this.eduExpList.push(data)
