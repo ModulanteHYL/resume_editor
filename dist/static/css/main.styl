@@ -1,9 +1,12 @@
 border = 1px solid #c8c8dc
 *
   box-sizing border-box
-  margin-left 5px
-  margin-right 5px
+  // margin-left 5px
+  // margin-right 5px
   // font-family arial
+  font-family var(--font-theme)
+  margin 0
+  padding 0
 body
   width 922px
   margin auto
@@ -24,6 +27,7 @@ input
   border 1px solid rgb(200,200,220)
   padding-left 3px
   font-size: .8rem
+  height 1.5rem
 .delete_data
   display none
 .hr
@@ -70,7 +74,15 @@ input
   display none
 button,input[type=button]
   cursor pointer
+  padding 0 20px
+  height 1.5rem
   &:hover
     background rgb(200,200,200)
 .m-pointer
   cursor pointer
+.m-text-center
+  text-align center
+.common-height
+  display block
+  line-height 28px
+  height 28px
