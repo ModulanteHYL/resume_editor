@@ -86,3 +86,32 @@ button,input[type=button]
   display block
   line-height 28px
   height 28px
+@keyframes borderTip {
+  from {border-color: #ffdbd7}
+  to {border-color: #ff1800}
+}
+.m-border-tip
+  border-width 1px
+  border-style solid
+  border-radius 5px
+  margin-bottom 2px
+  animation borderTip 0.5s infinite alternate
+.m-delete-btn
+  position: absolute;
+  right: -31px;
+  top: 50%;
+  transform: translate(0,-50%);
+  border-width: 1px;
+  border-style: solid;
+  border-color: #ccc;
+  border-radius: 50%;
+  width: 20px;
+  height: 20px;
+  margin: auto;
+  text-align: center;
+  line-height: 20px;
+  cursor: pointer;
+  color: #ccc;
+  &:hover
+    border-color black
+    color black
