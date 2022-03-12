@@ -1,6 +1,6 @@
 <template>
     <div class="project_exp">
-        <h3 class="hr">项目经验<button class="delete_data" @click="deleteProData()">删除已输入数据</button></h3>
+        <h3 class="hr">项目经验<button class="delete_data" @click="deleteProData()">删除全部已输入数据</button></h3>
         <div v-if="projectInfo.length > 0">
             <ul class="row" v-for="(obj,index) in projectInfo" :key="index">
                 <h4>{{obj.proName}}</h4>
@@ -140,8 +140,6 @@ export default {
       width 90%
 div.project_exp
   .row
-    padding 0
-    margin 10px
     h4
       margin-bottom 10px
     li

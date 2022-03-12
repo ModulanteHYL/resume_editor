@@ -13,6 +13,16 @@ Vue.directive('auto-focus', {
     console.log(el)
   }
 })
+Vue.directive('coms-pointer', {
+  inserted: function (el) {
+    el.classList.add('m-pointer')
+  }
+})
+Vue.directive('text-center', {
+  inserted: function (el) {
+    el.classList.add('m-text-center')
+  }
+})
 new Vue({
   el: '#app',
   router,

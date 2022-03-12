@@ -2,10 +2,9 @@
     <div class="skills">
         <h3 class="hr">专业技能</h3>
         <ul class="skills_lists">
-            <!-- 展示区 -->
             <li v-for="(obj,index) in skillInfo" :key='index'>
                 <span style="white-space:nowrap">
-                  <h4 v-show="obj.skillName" class="name m-pointer" @click="obj.skillName = undefined;inputEdit(null, `skillNameRef${index}`)">{{obj.skillName}}</h4>
+                  <h4 v-show="obj.skillName" v-coms-pointer class="name" @click="obj.skillName = undefined;inputEdit(null, `skillNameRef${index}`)">{{obj.skillName}}</h4>
                   <input
                     :ref="'skillNameRef'+index"
                     style="line-height: 16px;"
@@ -18,8 +17,8 @@
                     >
                   :
                 </span>
-                <span style="width: 72%">
-                  <p v-show="obj.content" class="describe m-pointer" @click="obj.content = undefined;inputEdit(null, `skillDescRef${index}`)">{{obj.content}}
+                <span style="width: 90%">
+                  <p v-show="obj.content" v-coms-pointer class="describe" @click="obj.content = undefined;inputEdit(null, `skillDescRef${index}`)">{{obj.content}}
                     <input :id="index" type="button" value="删除" @click="deleteOne($event)">
                   </p>
                   <input
@@ -34,10 +33,14 @@
                 </span>
             </li>
         </ul>
+        <div>
+          <SkillsTemplateVue v-if="isAdd" @addOneSkill="addOneSkill"></SkillsTemplateVue>
+        </div>
     </div>
 </template>
 <script>
 import mixins from '@/mixins/index'
+import SkillsTemplateVue from '@/reuse/skills_template.vue'
 
 export default {
   mixins: [mixins],
@@ -45,45 +48,48 @@ export default {
     return {
       hiddenAll: false, // 控制按钮显示
       hiddenClass: 'hidden',
-      skillName: '', // 技能名称
-      content: '', // 技能描述
-      skillInfo: [], // 所有技能信息
-      subscribe: null
+      skillInfo: [
+        // {
+        //   skillName: '', // 技能名称
+        //   content: '', // 技能描述
+        // }
+      ], // 所有技能信息
+      subscribe: null,
+      isAdd: false
     }
   },
+  components: {
+    SkillsTemplateVue
+  },
   methods: {
-    // 添加新技能
-    addOne () {
-      if (this.skillInfo.length > 0) {
-        const length = this.skillInfo.length
-        if (!this.skillInfo[length - 1].skillName || !this.skillInfo[length - 1].content) {
-          alert('存在没有编辑的技能项，请编辑完后再添加')
-          return
-        }
-      }
-      this.skillInfo.push(
-        {
-          skillName: '',
-          content: ''
-        }
-      )
-    },
     // 删除该条内容
     deleteOne (e) {
       if (confirm('确定要删除吗?')) {
         this.skillInfo.splice(e.target.id, 1)
       }
+    },
+    addOneSkill (data) {
+      this.skillInfo.push(data)
+      this.closeAddOneSkill()
+    },
+    openAddOneSkill () {
+      this.isAdd = true
+    },
+    closeAddOneSkill () {
+      this.isAdd = false
     }
   },
   created () {
     let resume = window.localStorage.getItem('resume')
     if (resume) {
-      this.skillInfo = JSON.parse(resume)['skills']
+      const skillList = JSON.parse(resume)['skills']
+      if (skillList.length > 0) {
+        this.skillInfo = Object.assign([], skillList)
+      } else {
+        this.closeAddOneSkill()
+      }
     } else {
-      this.skillInfo.push({
-        skillName: '',
-        content: ''
-      })
+      this.openAddOneSkill()
     }
   },
   mounted () {
@@ -91,13 +97,19 @@ export default {
       PubSub.publish('submitData', {skills: Object.assign([], this.skillInfo)})
     })
     PubSub.subscribe('hidden', (msg, data) => {
-      this.hiddenAll = true
+      this.closeAddOneSkill()
     })
-    PubSub.subscribe('addOneSkill', (msg, data) => {
-      this.addOne()
+    PubSub.subscribe('order_AddOneSkill', (msg, data) => {
+      if (this.isAdd) {
+        alert('存在未完成的编辑项，不能新增')
+        return
+      }
+      this.openAddOneSkill()
     })
     PubSub.subscribe('editing', (msg, data) => {
-      this.hiddenAll = false
+      if (this.skillInfo.length === 0) {
+        this.openAddOneSkill()
+      }
     })
   },
   beforeDestroy () {

@@ -3,7 +3,7 @@
     <header class="personal_info clearfix">
         <div id="title" class="main-title">个人简历</div>
         <div class="info">
-            <span class="my_name_label m-pointer" v-show="myName" @click="inputEdit('myName', 'myNameRef')">{{ myName }}</span>
+            <span v-coms-pointer class="my_name_label" v-show="myName" @click="inputEdit('myName', 'myNameRef')">{{ myName }}</span>
             <input
               ref="myNameRef"
               class="list_box my_name_input"
@@ -14,9 +14,9 @@
               @blur="myName=$event.target.value"
               @keypress.enter="myName=$event.target.value"
               >
-            <div>
+            <div class="common-height">
                 <span>
-                  <span class="m-pointer" v-show='age' @click="inputEdit('age', 'myAgeRef')">{{age}}</span>
+                  <span v-coms-pointer v-show='age' @click="inputEdit('age', 'myAgeRef')">{{age}}</span>
                   <input
                     ref="myAgeRef"
                     class="list_box"
@@ -32,7 +32,7 @@
                 </span>
                 <span>|</span>
                 <span>工作年限：
-                  <span class="m-pointer" v-show="workYear" @click="inputEdit('workYear', 'myWorkYearRef')">{{workYear}}</span>
+                  <span v-coms-pointer v-show="workYear" @click="inputEdit('workYear', 'myWorkYearRef')">{{workYear}}</span>
                   <input
                     ref="myWorkYearRef"
                     class="list_box"
@@ -48,7 +48,7 @@
                 </span>
                 <span>|</span>
                 <span>现居：
-                  <span class="m-pointer" v-show="myHome" @click="inputEdit('myHome', 'myAddressRef')">{{myHome}}</span>
+                  <span v-coms-pointer v-show="myHome" @click="inputEdit('myHome', 'myAddressRef')">{{myHome}}</span>
                   <input
                     ref="myAddressRef"
                     class="list_box"
@@ -63,8 +63,8 @@
                 </span>
             </div>
             <div>
-                <span>求职岗位:
-                  <span class="m-pointer" v-show="jobPost" @click="inputEdit('jobPost', 'myJobWantedRef')">{{jobPost}}</span>
+                <span class="common-height">求职岗位:
+                  <span v-coms-pointer v-show="jobPost" @click="inputEdit('jobPost', 'myJobWantedRef')">{{jobPost}}</span>
                   <input
                     ref="myJobWantedRef"
                     class="list_box"
@@ -76,9 +76,8 @@
                     @keypress.enter="jobPost=$event.target.value"
                     >
                 </span>
-                <br>
-                <span>联系电话：
-                  <span class="m-pointer" v-show="phoneNum" @click="inputEdit('phoneNum', 'myContactInfoRef')">{{phoneNum}}</span>
+                <span class="common-height">联系电话：
+                  <span v-coms-pointer v-show="phoneNum" @click="inputEdit('phoneNum', 'myContactInfoRef')">{{phoneNum}}</span>
                   <input
                     ref="myContactInfoRef"
                     class="list_box"
@@ -90,9 +89,8 @@
                     @keypress.enter="phoneNum=$event.target.value"
                     >
                 </span>
-                <br>
-                <span>邮箱：
-                  <span class="m-pointer" v-show="email" @click="inputEdit('email', 'myEmailRef')">{{email}}</span>
+                <span class="common-height">邮箱：
+                  <span v-coms-pointer v-show="email" @click="inputEdit('email', 'myEmailRef')">{{email}}</span>
                   <input
                     ref="myEmailRef"
                     class="list_box"
@@ -116,24 +114,6 @@
       <div :is="obj.component" v-for="(obj,index) in componentArr" :key="index" style="margin-top:20px"></div>
       <!-- 操作区域 -->
       <operationArea @saveData="saveData"></operationArea>
-      <!-- <div :class="border1px" v-show="!isComplete" style="margin-bottom:20px">
-        <select id="theme" @change="getOptionValue ($event)">
-          <option value="" selected>未选择</option>
-          <option value="edu_exp">教育经历</option>
-          <option value="skills">专业技能</option>
-          <option value="work_exp">工作经验</option>
-          <option value="project_exp">项目经验</option>
-          <option value="self_evaluation">自我评价</option>
-        </select>
-        <button @click="addOne">添加</button>
-        <button @click="addAll">添加全部</button>
-        <button @click="deleteOne">删除</button>
-        <button @click="deleteAll">删除全部</button>
-        <button @click="hiddenAll">隐藏全部按钮</button>
-        <button @click="saveData">保存页面数据</button>
-        <button @click="clearStorage">清除已存数据</button>
-        <div class="tip"><span title="编辑完简历按下Ctrl+P">鼠标放在我上面，告诉你如何将网页另存为PDF简历？</span></div>
-      </div> -->
     </main>
   </div>
 </template>
@@ -190,17 +170,11 @@ export default {
         alert('请选择图片文件')
       }
     },
-    // 隐藏全部按钮及输入框
-    hiddenAll () {
-      if (confirm('请确认简历所有内容已输入完毕，确认后按钮将不可用。隐藏完所有按钮后，按下Ctrl+P可将简历另存为PDF')) {
-        PubSub.publish('hidden')
-        this.isComplete = true
-      }
-    },
     // 清除页面数据缓存
     clearStorage () {
       if (window.localStorage.getItem('resume')) {
         window.localStorage.removeItem('resume')
+        window.location.reload()
         alert('数据已清除')
       } else {
         alert('没有找到要清除的数据')
@@ -254,34 +228,6 @@ export default {
             component: arr[i - 1]
           })
         }
-      }
-    },
-    // 添加一个新组件到页面
-    addOne () {
-      if (!this.componentName) { // 判断是否选择了组件
-        alert('请在下拉框选择要添加的条目！')
-        return
-      }
-      for (let obj of this.componentArr) {
-        if (obj.id === this.componentIndex) { // 通过id与index对比判断是否已存在组件
-          this.hasIt = true
-          break
-        }
-        this.hasIt = false
-      }
-      this.hasIt ? alert('已有该条目！不能再添加') : this.chooseComponent(this.componentName, this.componentIndex)
-    },
-    // 删除全部组件
-    deleteAll () {
-      this.componentArr = []
-    },
-    // 删除一个组件
-    deleteOne () {
-      if (this.componentIndex) {
-        const newArr = this.componentArr.filter(obj => obj.id !== this.componentIndex)
-        this.componentArr = newArr
-      } else {
-        alert('请在左边下拉框选择要删除的条目')
       }
     },
     // 组件分类
@@ -347,6 +293,9 @@ export default {
     })
     PubSub.subscribe('editing', (msg, data) => {
       this.isEditMode = true
+    })
+    PubSub.subscribe('deleteStorage', () => {
+      this.clearStorage()
     })
   }
 }
@@ -418,6 +367,7 @@ export default {
   font-weight bold
 .my_name_input
   line-height 34px
+  height 38px
   width 150px
   font-size 2em
 </style>

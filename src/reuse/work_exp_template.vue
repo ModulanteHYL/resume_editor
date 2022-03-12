@@ -13,15 +13,17 @@
         <li v-for="(obj,index) in workContent" :key="index">
           <p><input class="content_box" type="text" placeholder="职责..." v-model="obj.list"></p>
         </li>
-        <button @click="addOneList()">添加一条职责</button>
-        <button style="margin-left:72%" @click="submitOne()">提交本条经历</button>
+        <div @click="addOneList()" class="add_one_duty" v-text-center v-coms-pointer>添加一条职责</div>
       </ul>
+      <div v-text-center style="margin-bottom: 10px">
+        <button @click="submitOne()">提交本条经历</button>
+      </div>
     </div>
   </div>
 </template>
 
 <script>
-export default {
+const WorkExpTemplate = {
   data () {
     return {
       company: '', // 公司
@@ -46,13 +48,16 @@ export default {
     }
   }
 }
+export default WorkExpTemplate
 </script>
 
 <style lang="stylus" scoped>
 .work
   margin-bottom 3px
+  padding: 5px 5px 0 5px;
   ul.work_content
     list-style disc
+    margin-left 48px
     .add_items
       visibility hidden
     &:hover .add_items
@@ -67,4 +72,11 @@ export default {
       margin 0
       &:nth-child(1)
         float left
+.add_one_duty
+  padding 2px 0
+  margin 0 6px 10px 0
+  border 1px dashed #ccc
+  &:hover
+    background-color: #ccc
+    color white
 </style>

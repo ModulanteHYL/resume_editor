@@ -121,6 +121,7 @@ div.work_exp
       cursor pointer
     ul.work_content
       list-style disc
+      margin-left 48px
       .add_items
         visibility hidden
       &:hover .add_items

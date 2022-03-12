@@ -1,11 +1,11 @@
 <template>
     <div class="self_evaluation">
         <h3 class="hr">自我评价</h3>
-        <section class="content" v-show="selfEvaluation" @click="updataText">
+        <div class="content" v-show="!isEditMode" @click="updataText">
             {{selfEvaluation}}
-        </section>
-        <div v-if="!selfEvaluation">
-            <div class="edit-box" contenteditable="true"></div>
+        </div>
+        <div v-if="isEditMode">
+            <div class="edit-box" contenteditable="true">{{selfEvaluation}}</div>
             <button class="submit-text" @click="submitText()">提交</button>
         </div>
     </div>
@@ -15,7 +15,8 @@ export default {
   data () {
     return {
       selfEvaluation: '', // 自我评价
-      subscribe: null
+      subscribe: null,
+      isEditMode: true
     }
   },
   methods: {
@@ -24,13 +25,14 @@ export default {
       let text = document.querySelector('.edit-box').textContent
       if (text !== '') {
         this.selfEvaluation = text
+        this.isEditMode = false
       } else {
         alert('请输入内容！')
       }
     },
     // 重新编辑内容
     updataText () {
-      this.selfEvaluation = ''
+      this.isEditMode = true
     }
   },
   created () {
@@ -49,6 +51,14 @@ export default {
         selfEvaluation: this.selfEvaluation
       }
       PubSub.publish('submitData', {self: Object.assign({}, self)})
+    })
+    PubSub.subscribe('hidden', () => {
+      this.isEditMode = false
+    })
+    PubSub.subscribe('editing', () => {
+      if (!this.selfEvaluation) {
+        this.isEditMode = true
+      }
     })
   },
   beforeDestroy () {

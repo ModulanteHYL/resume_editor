@@ -1,7 +1,10 @@
 <template>
   <div>
     <ul :class="['row','dashed_border','edit_box']">
-      <h4><input class="list_box" type="text" placeholder="项目名称..." v-model="proName"></h4>
+      <div>
+        <label for="projectName">项目名称:</label>
+        <input name="projectName" class="list_box" type="text" placeholder="项目名称..." v-model="proName">
+      </div>
       <li>
         <span>项目描述：</span>
         <section><textarea class="content-style style_supply"  @input="proDescribe=$event.target.value"></textarea></section>
@@ -16,14 +19,16 @@
         </span>
         <section><textarea class="content-style style_supply" @input="item.content=$event.target.value"></textarea></section>
       </li>
-      <button class="add_item" @click="addDescribe()">添加自定义项</button>
-      <button class="add_project" @click="submitProject()">提交本条经验</button>
+      <div class="add_costom_item" @click="addDescribe()" v-text-center v-coms-pointer>添加自定义项</div>
+      <div v-text-center style="margin-bottom:10px">
+        <button @click="submitProject()">提交本条经验</button>
+      </div>
     </ul>
   </div>
 </template>
 
 <script>
-export default {
+const ProjectExpTemplateVue = {
   data () {
     return {
       proName: '',
@@ -49,10 +54,12 @@ export default {
     }
   }
 }
+export default ProjectExpTemplateVue
 </script>
 
 <style lang="stylus" scoped>
 .edit_box
+  padding 5px 0 0 10px
   li
     span
       float left
@@ -64,14 +71,6 @@ export default {
       background-color inherit
       font inherit
       overflow hidden
-  .add_item
-    visibility hidden
-    margin-left 20px
-    margin-bottom 2%
-  &:hover .add_item
-    visibility visible
-  .add_project
-    margin-left 61%
   .other_item
     display inline-block
     width 150px
@@ -79,10 +78,16 @@ export default {
     word-wrap none
     input[type=text]
       width 90%
+      margin: 0 0 5px
 .row
-  padding 0
-  margin 10px
   li
     list-style none
     margin-left 11px
+.add_costom_item
+  border 1px dashed #ccc
+  padding 2px 0
+  margin 0 17px 10px 12px
+  &:hover
+    background-color #ccc
+    color white
 </style>

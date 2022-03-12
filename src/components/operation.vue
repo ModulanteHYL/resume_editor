@@ -7,7 +7,7 @@
         <div class="menu-area">
           <ul>
             <li>
-              <button @click="addEduExp" disabled>增加一条教育经历</button>
+              <button @click="addEduExp">增加一条教育经历</button>
             </li>
             <li>
               <button @click="addSkill">增加一条专业技能</button>
@@ -22,6 +22,9 @@
               <button @click="saveData">保存数据到浏览器</button>
             </li>
             <li>
+              <button @click="deleteStorage">删除保存的数据</button>
+            </li>
+            <li>
               <button @click="hideAvatar">{{isHideAvatar?'显示':'隐藏'}}头像框</button>
             </li>
             <li>
@@ -29,6 +32,19 @@
             </li>
             <li>
               <span>Ctrl+P保存简历为PDF</span>
+            </li>
+            <li>
+              <span>更改字体样式:</span>
+              <select style="width: 38%" @change="fontFamilyChange">
+                <option value="auto">默认</option>
+                <option value="cursive">cursive</option>
+                <option value="fangsong">仿宋</option>
+                <option value="monospace">monospace</option>
+                <option value="serif">serif</option>
+              </select>
+            </li>
+            <li>
+              <button @click="editComplete">完成编辑</button>
             </li>
           </ul>
         </div>
@@ -62,10 +78,10 @@ export default {
   },
   methods: {
     addEduExp () {
-
+      PubSub.publish('order_AddOneEduExp')
     },
     addSkill () {
-      PubSub.publish('addOneSkill')
+      PubSub.publish('order_AddOneSkill')
     },
     addWorkExp () {
       PubSub.publish('order_AddOneWorkExp')
@@ -82,16 +98,28 @@ export default {
     hideAvatar () {
       this.isHideAvatar = !this.isHideAvatar
       PubSub.publish('hideAvatar', this.isHideAvatar)
+    },
+    editComplete () {
+      PubSub.publish('hidden')
+    },
+    deleteStorage () {
+      PubSub.publish('deleteStorage')
+    },
+    fontFamilyChange (event) {
+      const styleData = event.target.value
+      document.getElementById('app').style.setProperty('--font-theme', styleData)
     }
   }
 }
 </script>
 
 <style lang="stylus" scoped>
+main
+  padding 0 10px
 ul
   list-style none
-  padding-left 20px
-  padding-right 20px
+  padding-left 10px
+  padding-right 10px
   li
     margin-bottom 10px
     &:nth-child(1)
