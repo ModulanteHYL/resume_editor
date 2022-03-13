@@ -18,10 +18,10 @@
             <input type="text" v-model="courseInfo">
           </td>
           <td>
-            <input type="text" v-model="studyTime" placeholder="全日制/非全日制">
+            <input type="text" v-model="eduForm" placeholder="全日制/非全日制">
           </td>
           <td>
-            <input type="text" v-model="eduForm">
+            <input type="text" v-model="studyTime">
           </td>
         </tr>
       </tbody>
