@@ -188,6 +188,13 @@ export default {
     },
     // 缓存数据到本地
     saveData () {
+      this.autoSave()
+      this.globalTip({
+        type: 'success',
+        content: '保存成功!'
+      })
+    },
+    autoSave () {
       let base = {
         myName: this.myName,
         age: this.age,
@@ -202,10 +209,6 @@ export default {
       this.resume = {base: Object.assign({}, base)}
       this.setLocal()
       PubSub.publish('save')
-      this.globalTip({
-        type: 'success',
-        content: '保存成功!'
-      })
     },
     // 执行缓存
     setLocal () {
@@ -305,6 +308,9 @@ export default {
     })
     PubSub.subscribe('deleteStorage', () => {
       this.clearStorage()
+    })
+    PubSub.subscribe('autoSave', () => {
+      this.autoSave()
     })
   }
 }

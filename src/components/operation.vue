@@ -27,10 +27,10 @@
             <li>
               <button @click="hideAvatar">{{isHideAvatar?'显示':'隐藏'}}头像框</button>
             </li>
-            <li>
-              <span>Ctrl+Q进入编辑模式</span>
+            <li style="border-top:1px solid">
+              <span>菜单隐藏后按Ctrl+Q进入编辑模式</span>
             </li>
-            <li>
+            <li style="border-bottom:1px solid">
               <span>Ctrl+P保存简历为PDF</span>
             </li>
             <li>
@@ -42,6 +42,10 @@
                 <option value="monospace">monospace</option>
                 <option value="serif">serif</option>
               </select>
+            </li>
+            <li>
+              <label for="autoSave">自动保存:</label>
+              <input type="checkbox" name="autoSave" id="autoSave" style="width: 16px;vertical-align: top;" v-model="autoSave">
             </li>
             <li>
               <button @click="openDeleteFn">进入删除模式</button>
@@ -71,7 +75,21 @@ export default {
     return {
       isEditMode: true,
       isHideAvatar: false,
-      isDeleteMode: false
+      isDeleteMode: false,
+      autoSave: false,
+      autoSaveTimer: undefined
+    }
+  },
+  watch: {
+    autoSave: function (newVal, oldVal) {
+      if (newVal) {
+        this.autoSaveTimer = setInterval(() => {
+          PubSub.publish('autoSave')
+        }, 3000)
+      } else {
+        clearInterval(this.autoSaveTimer)
+        this.autoSaveTimer = undefined
+      }
     }
   },
   created () {
