@@ -86,8 +86,9 @@ export default {
       const skillList = JSON.parse(resume)['skills']
       if (skillList.length > 0) {
         this.skillInfo = Object.assign([], skillList)
-      } else {
         this.closeAddOneSkill()
+      } else {
+        this.openAddOneSkill()
       }
     } else {
       this.openAddOneSkill()
@@ -103,7 +104,10 @@ export default {
     })
     PubSub.subscribe('order_AddOneSkill', (msg, data) => {
       if (this.isAdd) {
-        alert('存在未完成的编辑项，不能新增')
+        this.globalTip({
+          type: 'notice',
+          content: '存在未完成编辑的专业技能，不能新增！'
+        })
         return
       }
       this.openAddOneSkill()

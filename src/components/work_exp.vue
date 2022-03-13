@@ -24,8 +24,10 @@
 </template>
 <script>
 import WorkExpTemplate from '@/reuse/work_exp_template.vue'
+import mixins from '@/mixins/index'
 
 export default {
+  mixins: [mixins],
   data () {
     return {
       workInfo: [], // 工作经历的最终所有信息
@@ -87,7 +89,10 @@ export default {
     })
     PubSub.subscribe('order_AddOneWorkExp', () => {
       if (this.isAdd) {
-        alert('存在没有提交的工作经验，不能新增!')
+        this.globalTip({
+          type: 'notice',
+          content: '存在没有提交的工作经验，不能新增！'
+        })
         return
       }
       this.openAddWorkExp()

@@ -63,7 +63,10 @@
 </template>
 
 <script>
+import mixins from '@/mixins/index'
+
 export default {
+  mixins: [mixins],
   data () {
     return {
       isEditMode: true,
@@ -76,6 +79,8 @@ export default {
       if (e.ctrlKey && e.key === 'p') { // ctrl+p
         this.isEditMode = false
         PubSub.publish('hidden')
+        PubSub.publish('hidden-border')
+        this.globalTip({})
       }
       if (e.ctrlKey && e.key === 'q') { // ctrl+q
         this.isEditMode = true
@@ -109,6 +114,10 @@ export default {
     editComplete () {
       PubSub.publish('hidden')
       this.isDeleteMode = false
+      this.globalTip({
+        type: 'success',
+        content: '温馨提示: 编辑完成请记得保存数据,避免刷新页面后数据丢失'
+      })
     },
     deleteStorage () {
       PubSub.publish('deleteStorage')

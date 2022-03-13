@@ -93,8 +93,8 @@ export default {
   created () {
     let resume = window.localStorage.getItem('resume')
     if (resume) {
-      if (resume.length > 0) {
-        let edu = JSON.parse(resume)['edu']
+      let edu = JSON.parse(resume)['edu']
+      if (edu.length > 0) {
         this.eduExpList = Object.assign([], edu)
         this.closeAddEduExp()
       } else {
@@ -110,7 +110,10 @@ export default {
     })
     PubSub.subscribe('order_AddOneEduExp', () => {
       if (this.isAdd) {
-        alert('存在没有编写完成的教育经历，不能再添加')
+        this.globalTip({
+          type: 'notice',
+          content: '存在没有编写完成的教育经历，不能再添加!'
+        })
         return
       }
       this.openAddEduExp()

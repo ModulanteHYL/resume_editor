@@ -11,7 +11,10 @@
     </div>
 </template>
 <script>
+import mixins from '@/mixins/index'
+
 export default {
+  mixins: [mixins],
   data () {
     return {
       selfEvaluation: '', // 自我评价
@@ -27,7 +30,10 @@ export default {
         this.selfEvaluation = text
         this.isEditMode = false
       } else {
-        alert('请输入内容！')
+        this.globalTip({
+          type: 'warn',
+          content: '请输入内容！'
+        })
       }
     },
     // 重新编辑内容

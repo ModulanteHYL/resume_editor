@@ -1,4 +1,4 @@
-const mixins = {
+export default {
   methods: {
     /**
      * 点击对应名称自动进入编辑模式并自动聚焦
@@ -16,7 +16,9 @@ const mixins = {
           this.$refs[refName].focus()
         }
       })
+    },
+    globalTip (msg) {
+      PubSub.publish('g-tip', msg)
     }
   }
 }
-export default mixins

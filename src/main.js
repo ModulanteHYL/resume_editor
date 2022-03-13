@@ -3,6 +3,7 @@
 import Vue from 'vue'
 import App from './App'
 import router from './router'
+import GlobalTip from './reuse/global_tip.vue'
 
 Vue.config.productionTip = false
 
@@ -44,6 +45,7 @@ Vue.directive('delete-btn', {
     el.innerText = 'X'
   }
 })
+Vue.component('global-tip', GlobalTip)
 new Vue({
   el: '#app',
   router,

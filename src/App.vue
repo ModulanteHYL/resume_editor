@@ -115,6 +115,7 @@
       <!-- 操作区域 -->
       <operationArea @saveData="saveData"></operationArea>
     </main>
+    <global-tip></global-tip>
   </div>
 </template>
 
@@ -167,7 +168,10 @@ export default {
           this.imgSrc = fr.result
         }
       } else {
-        alert('请选择图片文件')
+        this.globalTip({
+          type: 'warn',
+          content: '请选择图片文件!'
+        })
       }
     },
     // 清除页面数据缓存
@@ -175,9 +179,11 @@ export default {
       if (window.localStorage.getItem('resume')) {
         window.localStorage.removeItem('resume')
         window.location.reload()
-        alert('数据已清除')
       } else {
-        alert('没有找到要清除的数据')
+        this.globalTip({
+          type: 'error',
+          content: '没有找到要清除的数据!'
+        })
       }
     },
     // 缓存数据到本地
@@ -196,8 +202,10 @@ export default {
       this.resume = {base: Object.assign({}, base)}
       this.setLocal()
       PubSub.publish('save')
-      console.log(this.resume)
-      alert('保存成功')
+      this.globalTip({
+        type: 'success',
+        content: '保存成功!'
+      })
     },
     // 执行缓存
     setLocal () {
@@ -289,7 +297,7 @@ export default {
     PubSub.subscribe('hideAvatar', (msg, data) => {
       this.isHideAvatar = data
     })
-    PubSub.subscribe('hidden', (msg, data) => {
+    PubSub.subscribe('hidden-border', (msg, data) => {
       this.isEditMode = false
     })
     PubSub.subscribe('editing', (msg, data) => {

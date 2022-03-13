@@ -24,8 +24,10 @@
 </template>
 <script>
 import ProjectExpTemplateVue from '@/reuse/project_exp_template.vue'
+import mixins from '@/mixins/index'
 
 export default {
+  mixins: [mixins],
   data () {
     return {
       isAdd: true,
@@ -98,7 +100,10 @@ export default {
     })
     PubSub.subscribe('order_AddOneProjExp', () => {
       if (this.isAdd) {
-        alert('存在没有编辑的项目经验，不能新增')
+        this.globalTip({
+          type: 'notice',
+          content: '存在没有编辑的项目经验，不能再次新增！'
+        })
         return
       }
       this.openAddProjExp()
